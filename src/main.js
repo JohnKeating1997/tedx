@@ -3,6 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import '@/utils/adaptive.js'
+import '@/utils/landscape.js'
+// css样式
+import '@/style/normalize.css'
+import '@/style/global.less'
 
 Vue.config.productionTip = false
 

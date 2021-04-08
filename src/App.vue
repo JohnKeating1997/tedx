@@ -1,12 +1,19 @@
 <template>
-  <div id="app">
+  <div id="app" ref="view">
     <router-view/>
   </div>
 </template>
 
+<script src="//cdn.bootcss.com/eruda/1.5.2/eruda.min.js"></script>
+<script> window.eruda.init(); </script>
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  mounted () {
+  },
+  methods: {
+
+  }
 }
 </script>
 
@@ -16,7 +23,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #fff;
   margin-top: 60px;
 }
 </style>
