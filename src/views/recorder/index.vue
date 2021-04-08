@@ -34,7 +34,11 @@ export default {
   data () {
     return {
       recorder,
-      playTime: 0
+      playTime: 0,
+      // 波浪图-录音
+      drawRecordId: null,
+      oCanvas: null,
+      ctx: null
     }
   },
   created () {
