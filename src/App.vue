@@ -3,7 +3,6 @@
     <router-view/>
   </div>
 </template>
-
 <!--
 <script src="//cdn.bootcss.com/eruda/1.5.2/eruda.min.js"></script>
 <script> window.eruda.init(); </script>

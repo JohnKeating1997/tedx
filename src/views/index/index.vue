@@ -9,6 +9,7 @@ export default {
   name: 'Index',
   data () {
     return {
+      src: '@/assets/videos/opening.mp4'
     }
   }
 }
@@ -22,4 +23,5 @@ export default {
       height:100%;
     }
   }
+
 </style>
