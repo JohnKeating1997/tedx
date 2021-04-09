@@ -8,11 +8,11 @@ export function resizeScreen () {
     let style = htmlEle.style.cssText
     if (width >= height) {
       // 横屏
-      style += 'width:' + width + 'px;' // 注意旋转后的宽高切换
-      style += 'height:' + height + 'px;'
-      style += '-webkit-transform: rotate(0); transform: rotate(0);'
-      style += '-webkit-transform-origin: 0 0;'
-      style += 'transform-origin: 0 0;'
+      // style += 'width:' + width + 'px;' // 注意旋转后的宽高切换
+      // style += 'height:' + height + 'px;'
+      // style += '-webkit-transform: rotate(0); transform: rotate(0);'
+      // style += '-webkit-transform-origin: 0 0;'
+      // style += 'transform-origin: 0 0;'
     } else {
       // 竖屏
       style += 'width:' + height + 'px;'

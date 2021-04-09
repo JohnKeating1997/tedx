@@ -4,8 +4,10 @@
   </div>
 </template>
 
+<!--
 <script src="//cdn.bootcss.com/eruda/1.5.2/eruda.min.js"></script>
 <script> window.eruda.init(); </script>
+-->
 <script>
 export default {
   name: 'App',
@@ -24,6 +26,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #fff;
-  margin-top: 60px;
 }
 </style>

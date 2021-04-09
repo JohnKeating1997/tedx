@@ -1,5 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2021-04-09 16:25:13
+ * @LastEditTime: 2021-04-09 16:38:05
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \tedx\src\utils\adaptive.js
+ */
 // 设计宽度
-const designWidth = 375
+const designWidth = 390
 // 设计字体大小
 const designFontSize = 16
 
@@ -7,6 +15,7 @@ const designFontSize = 16
 export function getFontSize () {
   const { clientWidth } = document.documentElement
   const fontSize = clientWidth * designFontSize / designWidth
+  console.log(document.documentElement.clientHeight, document.documentElement.clientWidth)
   return fontSize
 }
 // 将html元素的fontSize设置为根据屏幕大小动态计算出的值
@@ -15,7 +24,7 @@ function adjustFontSize () {
   const htmlEle = document.querySelector('html')
   let fontSize = getFontSize()
   htmlEle.style.fontSize = `${fontSize}px`
-  // 当屏幕大发生变化时，重新计算rem
+  // 当屏幕大小发生变化时，重新计算rem
   window.onresize = () => {
     fontSize = getFontSize()
     htmlEle.style.fontSize = `${fontSize}px`
