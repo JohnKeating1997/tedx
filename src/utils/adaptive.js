@@ -1,5 +1,5 @@
 // 设计宽度
-const designWidth = 375
+const designWidth = 390
 // 设计字体大小
 const designFontSize = 16
 
@@ -7,6 +7,7 @@ const designFontSize = 16
 export function getFontSize () {
   const { clientWidth } = document.documentElement
   const fontSize = clientWidth * designFontSize / designWidth
+  console.log(document.documentElement.clientWidth, document.documentElement.clientHeight)
   return fontSize
 }
 // 将html元素的fontSize设置为根据屏幕大小动态计算出的值
