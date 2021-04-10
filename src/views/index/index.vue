@@ -2,11 +2,15 @@
   <div id="view"
     :style="{ 'backgroundImage' : 'url(' + background + ')' }"
   >
-    <div id="shade"></div>
+    <div
+      id="shade"
+      :style="{ 'opacity' : opacity, 'filter' : `alpha(opacity=${opacity * 100})`}"
+    ></div>
     <img id="logo" :src="logo" alt="图片加载中">
     <img id="dialog" :src="dialogInSpace" alt="图片加载中">
-    <img id="button-mic" :src="buttonMic" alt="图片加载中" @click="handleStart">
+    <img id="button-mic" :class="shrink" :src="buttonIcon" alt="图片加载中" @mousedown="handleMouseDown" @mouseup="handleMouseUp">
     <p id="info">轻触按钮， 留下你的声音~（最长15秒）</p>
+    <canvas id="canvas" width="754" height="98"></canvas>
   </div>
 </template>
 
@@ -16,6 +20,7 @@ import backgroundStop from '@/assets/videos/background-stop.jpg'
 import logo from '@/assets/images/TEDxHangzhou Logo Copy 2.svg'
 import dialogInSpace from '@/assets/images/#DialogueInSpace.svg'
 import buttonMic from '@/assets/images/Button-mic.svg'
+import buttonStop from '@/assets/images/Button-stop.svg'
 import Recorder from 'js-audio-recorder'
 import { mapGetters } from 'vuex'
 export default {
@@ -25,30 +30,102 @@ export default {
       // svg
       logo,
       dialogInSpace,
-      buttonMic,
-      background
+      buttonIcon: buttonMic,
+      background,
+      // 遮罩层
+      opacity: 0.35,
+      // 按钮缩放
+      shrink: '',
+      // 波浪图
+      drawRecordId: null,
+      oCancas: null,
+      ctx: null
     }
+  },
+  mounted () {
+    this.startCanvas()
   },
   computed: {
     ...mapGetters(['recorder'])
   },
   methods: {
-    handleStart () {
+    handleMouseDown () {
       // 更换背景图
       this.background = backgroundStop
       // 改变遮罩透明度
-      const shade = document.getElementById('shade')
-      shade.style.opacity = '.854'
-      shade.style.filter = 'alpha(opacity=85)'
+      this.opacity = 0.85
+      // 改变按钮大小
+      this.shrink = 'shrink'
+    },
+    handleMouseUp () {
+      // 恢复按钮大小
+      setTimeout(() => {
+        this.shrink = ''
+        this.buttonIcon = buttonStop
+      }, 100)
+      // 录音开始
       Recorder.getPermission().then(() => {
         console.log(`2. ${this}`)
         console.log('开始录音')
-        this.recorder.start() // 开始录音
+        this.recorder.start().then(() => {
+          // 绘制波形图
+          // setInterval(() => {
+          //   this.drawRecord()
+          // }, 200)
+          this.drawRecord()
+        }, (error) => {
+          // 录音出错
+          console.log(`${error.name} : ${error.message}`)
+        }) // 开始录音
       }, (error) => {
-        // this.$Message.info('请先允许该网页使用麦克风')
         alert(`${error.name} : ${error.message}`)
         console.log(`${error.name} : ${error.message}`)
       })
+    },
+    // 波浪图配置
+    startCanvas () {
+      this.oCanvas = document.getElementById('canvas')
+      this.ctx = this.oCanvas.getContext('2d')
+    },
+    drawRecord () {
+      // 用requestAnimationFrame稳定60fps绘制
+      this.drawRecordId = window.requestAnimationFrame(this.drawRecord)
+      // 清空画布
+      this.ctx.clearRect(0, 0, this.oCanvas.width, this.oCanvas.height)
+      // 实时获取音频大小数据
+      let dataArray = this.recorder.getRecordAnalyseData()
+      let bufferLength = dataArray.length
+
+      // 填充背景色
+      this.ctx.fillStyle = 'rgba(0,0,0,0)'
+      this.ctx.fillRect(0, 0, this.oCanvas.width, this.oCanvas.height)
+
+      // 设定波形绘制颜色
+      this.ctx.lineWidth = 1
+      this.ctx.strokeStyle = '#fff'
+
+      this.ctx.beginPath()
+
+      var sliceWidth = this.oCanvas.width * 1.0 / bufferLength // 一个点占多少位置，共有bufferLength个点要绘制
+      var x = 0 // 绘制点的x轴位置
+
+      for (var i = 0; i < bufferLength; i++) {
+        var v = dataArray[i] / 128.0
+        var y = v * this.oCanvas.height / 2
+
+        if (i === 0) {
+          // 第一个点
+          this.ctx.moveTo(x, y)
+        } else {
+          // 剩余的点
+          this.ctx.lineTo(x, y)
+        }
+        // 依次平移，绘制所有点
+        x += sliceWidth
+      }
+
+      this.ctx.lineTo(this.oCanvas.width, this.oCanvas.height / 2)
+      this.ctx.stroke()
     }
   }
 }
@@ -73,8 +150,8 @@ export default {
       height: 100%;
       z-index: 2;
       // -moz-opacity: 0.353;
-      opacity: .353;
-      filter: alpha(opacity=35);
+      // opacity: .353;
+      // filter: alpha(opacity=35);
       background: #000;
     }
     #logo{
@@ -90,11 +167,15 @@ export default {
       top:(23.8/16rem);
     }
     #button-mic{
-      z-index: 3;
+      z-index: 5;
       position:absolute;
       left:50%;
       top:50%;
       transform: translate(-50%,-50%);
+      width: (64/16rem);
+      &.shrink{
+        width: (64/16*0.8rem)
+      }
     }
     #info{
       z-index: 3;
@@ -105,6 +186,14 @@ export default {
       transform: translate(-50%,-50%);
       letter-spacing: (10/16rem);
       font-size: (14/16rem);
+    }
+    #canvas{
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      height: (97.72/16rem);
+      z-index: 4;
     }
   }
 
