@@ -36,3 +36,4 @@ export function resizeScreen () {
 }
 
 resizeScreen()
+console.log('landscape.js')

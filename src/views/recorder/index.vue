@@ -28,12 +28,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Recorder from 'js-audio-recorder'
-const recorder = new Recorder()
 export default {
   data () {
     return {
-      recorder,
       playTime: 0,
       // 波浪图-录音
       drawRecordId: null,
@@ -43,10 +42,12 @@ export default {
   },
   created () {
   },
+  computed: {
+    ...mapGetters(['recorder'])
+  },
   methods: {
     // 开始录音
     handleStart () {
-      this.recorder = new Recorder()
       Recorder.getPermission().then(() => {
         console.log(`2. ${this}`)
         console.log('开始录音')
