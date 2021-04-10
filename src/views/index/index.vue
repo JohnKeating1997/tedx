@@ -1,6 +1,7 @@
 <template>
-  <div id="view">
-    <!-- <img id="background-gif" src="@/assets/videos/background.gif" alt="请耐心等待"> -->
+  <div id="view"
+    :style="{ 'backgroundImage' : 'url(' + background + ')' }"
+  >
     <div id="shade"></div>
     <img id="logo" :src="logo" alt="图片加载中">
     <img id="dialog" :src="dialogInSpace" alt="图片加载中">
@@ -10,6 +11,8 @@
 </template>
 
 <script>
+import background from '@/assets/videos/background.gif'
+import backgroundStop from '@/assets/videos/background-stop.jpg'
 import logo from '@/assets/images/TEDxHangzhou Logo Copy 2.svg'
 import dialogInSpace from '@/assets/images/#DialogueInSpace.svg'
 import buttonMic from '@/assets/images/Button-mic.svg'
@@ -22,7 +25,8 @@ export default {
       // svg
       logo,
       dialogInSpace,
-      buttonMic
+      buttonMic,
+      background
     }
   },
   computed: {
@@ -30,6 +34,12 @@ export default {
   },
   methods: {
     handleStart () {
+      // 更换背景图
+      this.background = backgroundStop
+      // 改变遮罩透明度
+      const shade = document.getElementById('shade')
+      shade.style.opacity = '.854'
+      shade.style.filter = 'alpha(opacity=85)'
       Recorder.getPermission().then(() => {
         console.log(`2. ${this}`)
         console.log('开始录音')
@@ -49,7 +59,7 @@ export default {
     width:calc(min(100vmin*2,100vmax));
     height:100vmin;
     margin: 0 auto;
-    background-image: url("../../assets/videos/background.gif");
+    // background-image: url('../../assets/videos/background.gif');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -62,7 +72,7 @@ export default {
       width: 100%;
       height: 100%;
       z-index: 2;
-      -moz-opacity: 0.353;
+      // -moz-opacity: 0.353;
       opacity: .353;
       filter: alpha(opacity=35);
       background: #000;
