@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-09 16:47:01
- * @LastEditTime: 2021-04-09 20:42:37
+ * @LastEditTime: 2021-04-11 09:39:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\index\opening.vue
@@ -18,7 +18,7 @@
       <source src="@/assets/videos/opening.mp4" type="video/mp4">
       您的浏览器不支持HTML5
     </video> -->
-    <img id="opening-gif" src="@/assets/videos/opening.gif" alt="请耐心等待" @ended="handleEnded" @load="handleImageOnload">
+    <img id="opening-gif" src="@/assets/videos/opening.gif" alt="请耐心等待" @load="handleImageOnload">
   </div>
 </template>
 

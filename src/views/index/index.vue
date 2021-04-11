@@ -9,7 +9,7 @@
     <img id="logo" :src="logo" alt="图片加载中">
     <img id="dialog" :src="dialogInSpace" alt="图片加载中">
     <img id="button-mic" :class="shrink" :src="buttonIcon" alt="图片加载中" @mousedown="handleMouseDown" @mouseup="handleMouseUp">
-    <p id="info">轻触按钮， 留下你的声音~（最长15秒）</p>
+    <p id="info">{{info}}</p>
     <canvas id="canvas" width="754" height="98"></canvas>
   </div>
 </template>
@@ -36,51 +36,71 @@ export default {
       opacity: 0.35,
       // 按钮缩放
       shrink: '',
+      // 录音时长
+      durationTime: 'NaN',
       // 波浪图
       drawRecordId: null,
       oCancas: null,
-      ctx: null
+      ctx: null,
+      // 录音状态，用来切换界面
+      status: 'beforeRecord'
     }
   },
   mounted () {
     this.startCanvas()
+    // 获取录音时长的勾子
+    this.recorder.onprogress = (params) => {
+      const num = Math.ceil(params.duration)
+      // 不满10位要补0
+      this.durationTime = num < 10 ? `0${num}` : `${num}`
+    }
   },
   computed: {
-    ...mapGetters(['recorder'])
+    ...mapGetters(['recorder']),
+    // 波形图下方的info文案
+    info () {
+      return this.durationTime === 'NaN' ? '轻触按钮， 留下你的声音~（最长15秒）' : `00:${this.durationTime}`
+    }
   },
   methods: {
     handleMouseDown () {
-      // 更换背景图
-      this.background = backgroundStop
-      // 改变遮罩透明度
-      this.opacity = 0.85
-      // 改变按钮大小
-      this.shrink = 'shrink'
+      if (this.status === 'beforeRecord') {
+        // 更换背景图
+        this.background = backgroundStop
+        // 改变遮罩透明度
+        this.opacity = 0.85
+        // 改变按钮大小
+        this.shrink = 'shrink'
+      }
     },
     handleMouseUp () {
-      // 恢复按钮大小
-      setTimeout(() => {
-        this.shrink = ''
-        this.buttonIcon = buttonStop
-      }, 100)
-      // 录音开始
-      Recorder.getPermission().then(() => {
-        console.log(`2. ${this}`)
-        console.log('开始录音')
-        this.recorder.start().then(() => {
-          // 绘制波形图
-          // setInterval(() => {
-          //   this.drawRecord()
-          // }, 200)
-          this.drawRecord()
+      if (this.status === 'beforeRecord') {
+        // 恢复按钮大小
+        setTimeout(() => {
+          this.shrink = ''
+          this.buttonIcon = buttonStop
+        }, 100)
+        // 录音开始
+        Recorder.getPermission().then(() => {
+          console.log('开始录音')
+          this.recorder.start().then(() => {
+            this.drawRecord()
+          }, (error) => {
+            // 录音出错
+            console.log(`${error.name} : ${error.message}`)
+          }) // 开始录音
         }, (error) => {
-          // 录音出错
+          alert(`${error.name} : ${error.message}`)
           console.log(`${error.name} : ${error.message}`)
-        }) // 开始录音
-      }, (error) => {
-        alert(`${error.name} : ${error.message}`)
-        console.log(`${error.name} : ${error.message}`)
-      })
+        })
+        // 状态切换到录音中
+        this.status = 'recording'
+      } else {
+        // 停止录音
+        this.recorder.stop()
+        // 跳转到编辑信息页面
+        this.$router.push({path: '/edit'})
+      }
     },
     // 波浪图配置
     startCanvas () {
@@ -194,6 +214,11 @@ export default {
       width: 100%;
       height: (97.72/16rem);
       z-index: 4;
+    }
+    #duration-time{
+      position: absolute;
+      top: 0;
+      z-index:3;
     }
   }
 
