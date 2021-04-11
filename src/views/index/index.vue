@@ -6,10 +6,10 @@
       id="shade"
       :style="{ 'opacity' : opacity, 'filter' : `alpha(opacity=${opacity * 100})`}"
     ></div>
-    <img id="logo" :src="logo" alt="图片加载中">
+    <!-- <img id="logo" :src="logo" alt="图片加载中"> -->
     <img id="dialog" :src="dialogInSpace" alt="图片加载中">
     <img id="button-mic" :class="shrink" :src="buttonIcon" alt="图片加载中" @mousedown="handleMouseDown" @mouseup="handleMouseUp">
-    <p id="info">{{info}}</p>
+    <p id="info" :class="this.lang === 'CN' ? 'chinese' : 'english'">{{info}}</p>
     <canvas id="canvas" width="754" height="98"></canvas>
   </div>
 </template>
@@ -17,7 +17,7 @@
 <script>
 import background from '@/assets/videos/background.gif'
 import backgroundStop from '@/assets/videos/background-stop.jpg'
-import logo from '@/assets/images/TEDxHangzhou Logo Copy 2.svg'
+// import logo from '@/assets/images/TEDxHangzhou Logo Copy 2.svg'
 import dialogInSpace from '@/assets/images/#DialogueInSpace.svg'
 import buttonMic from '@/assets/images/Button-mic.svg'
 import buttonStop from '@/assets/images/Button-stop.svg'
@@ -28,7 +28,7 @@ export default {
   data () {
     return {
       // svg
-      logo,
+      // logo,
       dialogInSpace,
       buttonIcon: buttonMic,
       background,
@@ -56,10 +56,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['recorder']),
+    ...mapGetters(['recorder', 'lang']),
     // 波形图下方的info文案
     info () {
-      return this.durationTime === 'NaN' ? '轻触按钮， 留下你的声音~（最长15秒）' : `00:${this.durationTime}`
+      const text = this.lang === 'CN' ? '轻触按钮， 留下你的声音~（最长15秒）' : 'Tap the button to start recording (maximum 15s)'
+      return this.durationTime === 'NaN' ? text : `00:${this.durationTime}`
     }
   },
   methods: {
@@ -156,7 +157,6 @@ export default {
     width:calc(min(100vmin*2,100vmax));
     height:100vmin;
     margin: 0 auto;
-    // background-image: url('../../assets/videos/background.gif');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -199,13 +199,20 @@ export default {
     }
     #info{
       z-index: 3;
-      width: (500/16rem);
       position:absolute;
       bottom:(25/16rem);
       left: 50%;
       transform: translate(-50%,-50%);
-      letter-spacing: (10/16rem);
-      font-size: (14/16rem);
+      &.chinese {
+        width: (500/16rem);
+        letter-spacing: (10/16rem);
+        font-size: (14/16rem);
+      }
+      &.english {
+        width: (600/16rem);
+        letter-spacing: (2.5/16rem);
+        font-size: (14/16rem);
+      }
     }
     #canvas{
       position: relative;

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-08 17:01:07
- * @LastEditTime: 2021-04-11 09:52:30
+ * @LastEditTime: 2021-04-11 19:17:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\router\index.js
@@ -27,7 +27,7 @@ export default new Router({
       component: Index
     },
     {
-      path: '/path',
+      path: '/edit',
       name: 'Edit',
       component: Edit
     },
