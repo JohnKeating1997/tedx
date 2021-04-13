@@ -33,7 +33,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       ],
     },
     // https 服务开启
-    https: true,
+    // https: true,
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
@@ -51,11 +51,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     disableHostCheck: true,
     // https 服务开启
-    https: {
-      key: fs.readFileSync(path.join(__dirname, './cert/private.key')),
-      cert: fs.readFileSync(path.join(__dirname, './cert/file.crt')),
-      ca: fs.readFileSync(path.join(__dirname, './cert/file.crt'))
-    }
+    // https: {
+    //   key: fs.readFileSync(path.join(__dirname, './cert/private.key')),
+    //   cert: fs.readFileSync(path.join(__dirname, './cert/file.crt')),
+    //   ca: fs.readFileSync(path.join(__dirname, './cert/file.crt'))
+    // }
   },
   plugins: [
     new webpack.DefinePlugin({

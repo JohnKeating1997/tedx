@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-04-11 19:15:34
+ * @LastEditTime: 2021-04-13 11:14:30
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \tedx\config\index.js
+ */
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -14,7 +22,7 @@ module.exports = {
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 443, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

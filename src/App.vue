@@ -5,7 +5,9 @@
       |
       <span @click="handleToggleToEnglish" :class="this.lang === 'EN' ? 'selected' : 'unselected'">EN</span>
     </div>
-    <router-view/>
+    <keep-alive include="Edit">
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 <!--

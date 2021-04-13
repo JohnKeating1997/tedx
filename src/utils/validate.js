@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-12 16:41:52
- * @LastEditTime: 2021-04-12 17:11:07
+ * @LastEditTime: 2021-04-13 14:04:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\utils\validate.js
@@ -22,7 +22,6 @@ function validateForm (options) {
   if (!options.email || options.email.length === 0) {
     ret.email = false
   } else {
-    debugger
     ret.email = emailReg.test(options.email)
   }
   return ret

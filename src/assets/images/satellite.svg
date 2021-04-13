@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="461px" height="300px" viewBox="0 0 461 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>卫星组</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="461" height="300"></rect>
+        <polygon id="path-3" points="4.44751818 0 -8.71983975e-14 55.1948065 36.3510255 46.8895083 41.3270972 -1.52009894e-13"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="反馈-成功EN" transform="translate(-161.000000, 0.000000)">
+            <g id="卫星组" transform="translate(161.000000, 0.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Mask"></g>
+                <g opacity="0.503517514" mask="url(#mask-2)">
+                    <g transform="translate(247.500000, 150.500000) scale(-1, 1) rotate(7.000000) translate(-247.500000, -150.500000) translate(-1.000000, -40.000000)">
+                        <g id="卫星" transform="translate(373.944734, 105.379900) scale(-1, 1) rotate(-31.000000) translate(-373.944734, -105.379900) translate(264.936459, 47.905191)">
+                            <polygon id="Rectangle" stroke="#FFFFFF" stroke-width="0.768" fill="#FFFFFF" points="108.914741 80.2373691 117.351798 78.6176171 117.351798 83.2171843 108.914741 84.8369364"></polygon>
+                            <polygon id="Path-2" stroke="#FFFFFF" stroke-width="0.768" points="102.542808 90.6962494 166.188452 76.1448275 166.188452 14.4490083 102.542808 14.4490083"></polygon>
+                            <polyline id="Path-3" stroke="#FFFFFF" stroke-width="0.768" points="102.542808 14.4490083 63.5344263 18.8025204 63.5344263 81.2904923 102.542808 90.6962494"></polyline>
+                            <polygon id="Path-4" stroke="#000000" stroke-width="0.768" fill="#FFFFFF" points="124.311973 79.6419164 161.019106 72.6817498 161.019106 19.2121275 124.311973 19.2121275"></polygon>
+                            <line x1="124.311973" y1="68.2152554" x2="161.019106" y2="62.7978458" id="Path-5" stroke="#000000" stroke-width="0.768"></line>
+                            <line x1="124.311973" y1="56.2736823" x2="161.019106" y2="52.5726289" id="Path-6" stroke="#000000" stroke-width="0.768"></line>
+                            <line x1="124.311973" y1="44.2381979" x2="161.019106" y2="41.8106537" id="Path-7" stroke="#000000" stroke-width="0.768"></line>
+                            <line x1="124.311973" y1="32.1526131" x2="161.019106" y2="30.8509938" id="Path-8" stroke="#000000" stroke-width="0.768"></line>
+                            <line x1="134.36563" y1="19.2121275" x2="134.36563" y2="77.7299325" id="Path-9" stroke="#000000" stroke-width="0.768"></line>
+                            <line x1="142.665539" y1="19.2121275" x2="142.665539" y2="76.0646461" id="Path-10" stroke="#000000" stroke-width="0.768"></line>
+                            <line x1="149.568586" y1="19.2121275" x2="149.94952" y2="74.4879101" id="Path-10-Copy" stroke="#000000" stroke-width="0.768"></line>
+                            <line x1="155.704628" y1="19.2121275" x2="156.085561" y2="73.7213156" id="Path-10-Copy-2" stroke="#000000" stroke-width="0.768"></line>
+                            <polygon id="Path-11" stroke="#FFFFFF" stroke-width="0.768" points="107.280416 76.0646461 119.867849 73.7213156 119.867849 24.5767777 107.280416 24.5767777"></polygon>
+                            <line x1="107.280416" y1="68.2152554" x2="119.867849" y2="66.4483942" id="Path-12" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <line x1="107.280416" y1="59.4469898" x2="119.867849" y2="58.0158543" id="Path-12-Copy" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <line x1="107.280416" y1="50.7332062" x2="119.867849" y2="49.5833144" id="Path-12-Copy-2" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <line x1="107.280416" y1="41.8106537" x2="119.867849" y2="41.1507746" id="Path-12-Copy-3" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <line x1="107.280416" y1="33.0771717" x2="119.867849" y2="32.7182347" id="Path-12-Copy-4" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <polygon id="Path-13" stroke="#FFFFFF" stroke-width="0.768" points="111.115442 14.4490083 104.995329 14.4490083 104.995329 11.9821491 111.115442 10.9337266 146.500565 10.9337266 146.500565 14.4490083"></polygon>
+                            <polygon id="Path-14" stroke="#FFFFFF" stroke-width="0.768" points="146.500565 12.6913675 163.353948 12.6913675 163.353948 14.4490083 146.500565 14.4490083"></polygon>
+                            <polyline id="Path-15" stroke="#FFFFFF" stroke-width="0.768" points="91.8157948 15.6213431 91.8157948 12.6913675 101.394529 11.2110858 104.995329 11.2110858 104.995329 14.4490083"></polyline>
+                            <line x1="101.394529" y1="11.2110858" x2="101.394529" y2="14.4490083" id="Path-16" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <polyline id="Path-17" stroke="#FFFFFF" stroke-width="0.768" points="70.6975643 17.8359427 70.6975643 12.6913675 94.8468464 9.22411452 99.0644911 9.22411452 99.0644911 11.4510904"></polyline>
+                            <line x1="94.8468464" y1="9.22411452" x2="94.8468464" y2="11.9821491" id="Path-18" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <line x1="111.115442" y1="10.9337266" x2="111.115442" y2="14.4490083" id="Path-19" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <polygon id="Path-20" stroke="#FFFFFF" stroke-width="0.768" fill="#FFFFFF" points="128.76849 10.9337266 123.300671 10.9337266 126.034581 3.2677813"></polygon>
+                            <polygon id="Path-20-Copy" stroke="#FFFFFF" stroke-width="0.768" fill="#FFFFFF" points="141.040574 10.9337266 135.572755 10.9337266 138.306664 4.80097037"></polygon>
+                            <polygon id="Path-21" fill="#FFFFFF" points="78.0688063 11.6079773 78.0688063 2.85315649 102.542808 8.78325812e-14 102.542808 10.9337266 99.0644911 11.6079773 99.0644911 9.22411452 94.8468464 9.22411452"></polygon>
+                            <g id="Group-8" transform="translate(0.000000, 14.088154)">
+                                <polygon id="Path-22" stroke="#FFFFFF" stroke-width="0.768" fill="#000000" points="0 2.21459965 0 100.861266 88.0047917 81.2693285 88.0047917 0"></polygon>
+                                <polygon id="Path-22" stroke="#FFFFFF" stroke-width="0.6912" points="4.60203129 6.80783206 4.60203129 95.2798074 83.6035685 77.708637 83.6035685 4.82165236"></polygon>
+                                <path d="M23.0101565,6.57579692 L23.0101565,90.8799739 L22.2431512,90.9011957 L22.2431512,6.59701875 L23.0101565,6.57579692 Z M41.4182816,6.04129337 L41.4182816,87.2798639 L40.6512764,87.300314 L40.6512764,6.06174349 L41.4182816,6.04129337 Z M4.9855339,6.78556108 L4.9855339,95.2575365 L4.21852868,95.2798074 L4.21852868,6.80783206 L4.9855339,6.78556108 Z M57.9088938,5.24886337 L57.9088938,83.4218275 L57.1418885,83.4415059 L57.1418885,5.26854179 L57.9088938,5.24886337 Z M71.7149876,4.8479857 L71.7149876,80.721745 L70.9479824,80.7408446 L70.9479824,4.86708535 L71.7149876,4.8479857 Z M83.9870711,4.49165 L83.9870711,78.0662045 L83.2200659,78.0847253 L83.2200659,4.51017087 L83.9870711,4.49165 Z" id="Combined-Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+                                <line x1="4.60203129" y1="17.7579351" x2="83.6035685" y2="14.2124354" id="Path-23" stroke="#FFFFFF" stroke-width="0.768"></line>
+                                <line x1="4.60203129" y1="28.7777316" x2="83.6035685" y2="23.2199212" id="Path-24" stroke="#FFFFFF" stroke-width="0.768"></line>
+                                <line x1="4.60203129" y1="39.797528" x2="83.6035685" y2="32.227407" id="Path-25" stroke="#FFFFFF" stroke-width="0.768"></line>
+                                <line x1="4.60203129" y1="50.8270511" x2="83.6035685" y2="41.2348928" id="Path-26" stroke="#FFFFFF" stroke-width="0.768"></line>
+                                <line x1="4.60203129" y1="61.8371209" x2="83.6035685" y2="50.2423785" id="Path-27" stroke="#FFFFFF" stroke-width="0.768"></line>
+                                <line x1="4.60203129" y1="72.8569173" x2="83.6035685" y2="59.2498643" id="Path-28" stroke="#FFFFFF" stroke-width="0.768"></line>
+                                <line x1="4.60203129" y1="83.8767137" x2="83.6035685" y2="68.2573501" id="Path-29" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            </g>
+                            <polygon id="Path-30" stroke="#979797" stroke-width="0.768" points="173.162304 14.4490083 167.642174 78.6176171 211.964476 68.2152554 218.01655 14.4490083"></polygon>
+                            <polygon id="Path-30" stroke="#FFFFFF" stroke-width="0.768" fill="#000000" points="173.162304 14.4490083 167.642174 78.6176171 211.964476 68.2152554 218.01655 14.4490083"></polygon>
+                            <g id="Rectangle" transform="translate(172.667358, 18.143212)">
+                                <mask id="mask-4" fill="white">
+                                    <use xlink:href="#path-3"></use>
+                                </mask>
+                                <use id="Mask" stroke="#FFFFFF" stroke-width="0.6528" fill="#000000" xlink:href="#path-3"></use>
+                                <polygon fill="#FFFFFF" mask="url(#mask-4)" transform="translate(19.443040, 15.917668) rotate(-41.000000) translate(-19.443040, -15.917668) " points="-16.9830397 9.39045284 55.8656634 9.40977033 55.8691202 22.4448824 -16.9795829 22.4255649"></polygon>
+                                <polygon id="Rectangle-Copy-2" fill="#FFFFFF" mask="url(#mask-4)" transform="translate(22.056677, 28.732854) rotate(-41.000000) translate(-22.056677, -28.732854) " points="-14.3679794 27.573038 58.4807236 27.5923555 58.4813336 29.8926694 -14.3673694 29.8733519"></polygon>
+                            </g>
+                            <line x1="172.667358" y1="17.8359427" x2="166.47309" y2="18.1432118" id="Path-31" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <line x1="167.967698" y1="73.9965701" x2="166.188452" y2="73.7213156" id="Path-32" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <polyline id="Path-33" stroke="#FFFFFF" stroke-width="0.768" points="159.330623 77.7299325 159.330623 81.1273971 119.867849 90.6962494 111.490287 88.7907956"></polyline>
+                            <line x1="119.867849" y1="90.6962494" x2="119.867849" y2="86.9450713" id="Path-34" stroke="#FFFFFF" stroke-width="0.768"></line>
+                            <polygon id="Path-35" fill="#FFFFFF" points="22.6266539 41.8106537 41.034779 40.3610025 41.034779 50.3478115 22.6266539 52.1863961"></polygon>
+                            <polygon id="Path-36" fill="#FFFFFF" points="41.034779 60.7589577 57.5253912 58.4333386 57.5253912 68.2152554 41.034779 70.6590623"></polygon>
+                            <polygon id="Path-37" fill="#FFFFFF" points="57.5253912 78.1536795 71.331485 75.5194857 71.331485 84.8369364 57.5253912 87.5331261"></polygon>
+                        </g>
+                        <g id="Group-9" transform="translate(187.214120, 202.331457) rotate(-32.000000) translate(-187.214120, -202.331457) translate(41.132829, 82.884016)">
+                            <ellipse id="Oval" stroke="#FFFFFF" stroke-width="0.8" cx="73.5055799" cy="119.44744" rx="73.5055799" ry="119.44744"></ellipse>
+                            <ellipse id="Oval" stroke="#FFFFFF" stroke-width="0.8" opacity="0.5" cx="273.661178" cy="119.709652" rx="18.5014045" ry="29.9868051"></ellipse>
+                            <ellipse id="Oval" stroke="#FFFFFF" stroke-width="0.8" cx="230.944498" cy="119.460163" rx="37.0028089" ry="59.4738302"></ellipse>
+                            <ellipse id="Oval" stroke="#FFFFFF" stroke-width="0.8" cx="170.569015" cy="120.055298" rx="55.0041754" ry="89.4606353"></ellipse>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

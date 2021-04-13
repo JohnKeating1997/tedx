@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Button-home</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="反馈-成功A" transform="translate(-162.000000, -32.000000)">
+            <g id="Button-home" transform="translate(162.000000, 32.000000)">
+                <circle id="Oval" fill="#FFFFFF" cx="18" cy="18" r="18"></circle>
+                <g id="Group" transform="translate(6.000000, 6.000000)" fill="#000000" fill-rule="nonzero">
+                    <g id="ic_home">
+                        <path d="M20,10.520732 L20,20 L18,20 L18,11.479268 L12,6.65752549 L6,11.479268 L6,16 L4,16 L4,10.520732 L12,4.09174209 L20,10.520732 Z M11,20 L9,20 L9,13 L15,13 L15,20 L13,20 L13,15 L11,15 L11,20 Z M6,20 L4,20 L4,18 L6,18 L6,20 Z"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

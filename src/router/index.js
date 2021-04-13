@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-08 17:01:07
- * @LastEditTime: 2021-04-11 19:17:38
+ * @LastEditTime: 2021-04-13 15:59:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\router\index.js
@@ -12,6 +12,7 @@ import Opening from '@/views/index/opening.vue'
 import Index from '@/views/index'
 import Recorder from '@/views/recorder'
 import Edit from '@/views/edit'
+import Success from '@/views/submit/success'
 Vue.use(Router)
 
 export default new Router({
@@ -30,6 +31,11 @@ export default new Router({
       path: '/edit',
       name: 'Edit',
       component: Edit
+    },
+    {
+      path: '/success',
+      name: 'Success',
+      component: Success
     },
     {
       path: '/recorder',

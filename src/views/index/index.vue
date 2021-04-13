@@ -109,6 +109,13 @@ export default {
         })
         // 状态切换到录音中
         this.status = 'recording'
+        // 15s后自动停止录音，跳转
+        setTimeout(() => {
+          // 停止录音
+          this.recorder.stop()
+          // 跳转到编辑信息页面
+          this.$router.push({path: '/edit'})
+        }, 15000)
       } else {
         // 停止录音
         this.recorder.stop()
@@ -229,7 +236,7 @@ export default {
     }
     #canvas{
       position: relative;
-      top: 50%;
+      top: 73%;
       transform: translateY(-50%);
       width: 100%;
       height: (97.72/16rem);

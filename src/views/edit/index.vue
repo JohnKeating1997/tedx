@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-12 21:34:15
+ * @LastEditTime: 2021-04-13 15:56:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -11,7 +11,7 @@
   <div id="view">
     <img :src="title" alt="请耐心等待加载" id="title">
     <!-- 底部装饰框 -->
-    <div id="border"></div>
+    <!-- <div id="border"></div> -->
     <!-- 卡片主体 -->
     <div id="card">
       <div class="left-block">
@@ -25,15 +25,15 @@
         </div>
         <div class="buttons">
           <img :src="refreshButton" alt="请耐心等待加载" class="button" @click="handleRefresh">
-          <img :src="playButton" alt="请耐心等待加载" class="button" @click="handlePlay">
+          <img :src="playStopButton" alt="请耐心等待加载" class="button" @click="handlePlayStop">
           <img :src="deleteButton" alt="请耐心等待加载" class="button" @click="handleDelete">
         </div>
       </div>
       <div class="right-block">
         <form action="">
-          <p v-if="!userInput || !userTitle" @click="handleUserInputTitle" class="title">{{this.defaultTitle}}</p>
           <div class="title" ref="inputTitleContainer">
-            <input v-if="userInput" ref="inputTitle" type="text" v-model="userTitle" required>
+            <p v-if="!userInput || !userTitle" @click="handleUserInputTitle" class="text">{{this.defaultTitle}}</p>
+            <input v-if="userInput" ref="inputTitle" type="text" v-model="userTitle" required class="text input">
           </div>
           <div class="form-block">
             <div class="form-data user-name" ref="inputNameContainer">
@@ -66,12 +66,13 @@ import title from '@/assets/images/title-edit.svg'
 import uploadButton from '@/assets/images/upload.svg'
 import refreshButton from '@/assets/images/Button-refresh.svg'
 import playButton from '@/assets/images/Button-play.svg'
+import stopButton from '@/assets/images/Button-stop.svg'
 import deleteButton from '@/assets/images/Button-delete.svg'
 // 默认封面
 import uploadedImgURL from '@/assets/videos/background-stop.jpg'
 // 提交给后端
 import axios from 'axios'
-import { commitUrl } from '@/utils/api'
+import url from '@/utils/api'
 // const errorMsgCN = {
 //   title: '标题不能为空',
 //   name: '姓名/昵称不能为空',
@@ -100,6 +101,7 @@ export default {
       refreshButton,
       playButton,
       deleteButton,
+      stopButton,
       // 用户上传的图片
       uploadedImgURL,
       // 用户是否输入标题
@@ -112,8 +114,11 @@ export default {
       userVerifyCode: '',
       // 提交的数据
       options: {},
+      formData: {},
       // 验证码组件
-      verifyCode: {}
+      verifyCode: {},
+      // 音频是否正在播放
+      audioPlayStatus: false
     }
   },
   computed: {
@@ -133,6 +138,10 @@ export default {
     },
     verifyCodePlaceholder () {
       return this.lang === 'CN' ? '输入验证码*' : 'Verification code*'
+    },
+    // 播放状态
+    playStopButton () {
+      return this.audioPlayStatus ? this.stopButton : this.playButton
     }
   },
   mounted () {
@@ -145,6 +154,20 @@ export default {
       width: `${76 / 16 * fontSize}`,
       height: `${24 / 16 * fontSize}`
     })
+    // 如果已经有缓存的用户信息，直接拿来用
+    for (const i in this.userInfo) {
+      if (this.userInfo[i]) {
+        this[i] = this.userInfo[i]
+      }
+    }
+    // 每5s缓存一次用户输入信息
+    // setInterval(() => {
+    //   console.log('save')
+    //   this.saveTempUserInfo()
+    // }, 5000)
+  },
+  watch: {
+
   },
   methods: {
     handleUploadImage () {
@@ -204,45 +227,114 @@ export default {
         this.$router.push(this.$router.push({name: 'Index', params: {status: 'recording'}}))
       })
     },
-    handlePlay () {
+    handlePlayStop () {
+      if (this.audioPlayStatus) {
+        console.log('停止播放')
+        this.recorder.stopPlay() // 停止播放
+        return
+      }
       console.log('播放录音')
+      this.audioPlayStatus = true
       this.recorder.play() // 播放录音
+      setTimeout(() => {
+        this.audioPlayStatus = false
+      }, this.recorder.duration * 1000)
     },
     handleDelete () {
       this.recorder.stopPlay()
       this.$router.push(this.$router.push({name: 'Index'}))
     },
     // 提交表单信息
-    handleSubmit () {
+    async handleSubmit () {
       console.log('submit')
       if (this.verifyCode.validate(this.userVerifyCode)) {
+        // 把错误提示隐藏
+        let className = this.$refs.inputVeriycodeContainer.className
+        className = className.split('error')[0]
+        this.$refs.inputVeriycodeContainer.className = className
+        // 读取表单信息
         this.options.title = this.userTitle
         this.options.name = this.userName
         this.options.email = this.userEmail
         const result = validateForm(this.options)
         let flag = true
         for (const res in result) {
-          if (!result[res]) {
+          if (result[res]) {
+            let className = this.$refs[errorContainer[res]].className
+            className = className.split('error')[0]
+            this.$refs[errorContainer[res]].className = className
+          } else {
             flag = false
-            this.$refs[errorContainer[res]].className += this.lang === 'CN' ? ' chinese error' : ' english error'
-            // alert(this.lang === 'CN' ? errorMsgCN[res] : errorMsgEN[res])
+            this.$refs[errorContainer[res]].className += this.lang === 'CN' ? ' error chinese' : ' error english'
           }
         }
         // 传输表单
         if (flag) {
-          alert('表单验证成功！')
+          // 生成一个formData
+          this.formData = new FormData()
+          // 等待音频加入到formData
+          const result = await this.appendAudio().catch(err => {
+            alert(err)
+          })
+          if (!result) return
+          // 加入用户输入的信息
+          for (const index in this.options) {
+            this.formData.append(index, this.options[index])
+          }
+          axios.post(url.commitUrl, this.formData).then((res) => {
+            console.log(res)
+          }).catch((err) => {
+            console.log(err)
+          })
         }
       } else {
-        console.log(this.$refs.inputVeriycodeContainer.className)
-        this.$refs.inputVeriycodeContainer.className += this.lang === 'CN' ? ' chinese error' : ' english error'
+        // 验证码错误提示
+        this.$refs.inputVeriycodeContainer.className += this.lang === 'CN' ? ' error chinese' : ' error english'
       }
     },
+    appendAudio () {
+      return new Promise((resolve, reject) => {
+        if (this.recorder == null || this.recorder.duration === 0) {
+          reject(new Error(this.lang === 'CN' ? '请先录音' : 'please record first'))
+          return
+        }
+        this.recorder.pause() // 暂停录音
+        // this.timer = null
+        console.log('上传录音')// 上传录音
+        const blob = this.recorder.getWAVBlob()// 获取wav格式音频数据
+        // 此处获取到blob对象后需要设置fileName满足当前项目上传需求，其它项目可直接传把blob作为file塞入formData
+        const newbolb = new Blob([blob], { type: 'audio/wav' })
+        const fileOfBlob = new File([newbolb], `${new Date().getTime()}_${this.options.name}.wav`)
+        this.formData.append('audio', fileOfBlob)
+        resolve(true)
+      })
+      // 本地公共上传接口获取到服务器地址保存即可
+      // const axios = require('axios')
+      // axios.post(this.resource, formData).then(res => {
+      //   console.log(res.data.data[0].url)
+      //   // 开始调用保存的方法
+      //   this.uploadRecordModal = false
+      // })
+    },
+    // appendImg () {
+    //   return new Promise((resolve,))
+    // },
     // 上传数据
     pushData () {
       return new Promise((resolve, reject) => {
-        axios.post(commitUrl)
+        // axios.post(commitUrl)
       })
     }
+    // 缓存用户信息
+    // saveTempUserInfo () {
+    //   const tmp = {}
+    //   // debugger
+    //   if (this.uploadedImgURL) tmp.uploadedImgURL = this.uploadedImgURL
+    //   if (this.userTitle) tmp.userTitle = this.userTitle
+    //   if (this.userName) tmp.userName = this.userName
+    //   if (this.userEmail) tmp.userEmail = this.userEmail
+    //   this.saveFormData(tmp)
+    // }
   }
 }
 </script>
@@ -251,7 +343,7 @@ export default {
   #view{
     width:100vmax;
     height:100vmin;
-    background-image: url('../../assets/images/Back-text.svg');
+    background-image: url('../../assets/images/Text-background.svg');
     margin: 0 auto;
     background-size: cover;
     background-repeat: no-repeat;
@@ -291,7 +383,9 @@ export default {
         height: (161/16rem);
         font-size: 0;
         // background-image: url('../../assets/videos/background-stop.jpg');
-        background-size: contain;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
         position: absolute;
         left: (24/16rem);
         top: (24/16rem);
@@ -356,15 +450,23 @@ export default {
       position: relative;
       .title {
         position: absolute;
-        top: (20.5/16rem);
+        top: (17.5/16rem);
         left: (32/16rem);
         font-size: (14/16rem);
-        input {
+        .text {
           background: none;
           border: 0;
           text-align: left;
           font-size: (14/16rem);
           color: #fff;
+          font-weight: 700;
+          &.input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-align: left;
+            font-weight: 700;
+          }
         }
         &.error.chinese:after{
           content: '标题不能为空';
@@ -373,7 +475,8 @@ export default {
           text-align: left;
           position: absolute;
           left: 0;
-          bottom: (-32/16rem);
+          // bottom: (-32/16rem);
+          top: (20/16rem);
           width: (100/16rem);
         }
         &.error.english:after{
@@ -383,7 +486,8 @@ export default {
           text-align: left;
           position: absolute;
           left: 0;
-          bottom: (-32/16rem);
+          // bottom: (-32/16rem);
+          top: (20/16rem);
           width: (100/16rem);
         }
       }
@@ -478,13 +582,14 @@ export default {
         width: (76/16rem);
         height: (24/16rem);
         position: absolute;
-        bottom: (85/16rem);
+        bottom: (89/16rem);
         right: (32.5/16rem);
       }
       .submit{
         width: (240/16rem);
         height: (32/16rem);
         font-size: (12/16rem);
+        font-weight: 700;
         position: absolute;
         left: (32/16rem);
         bottom: (24.5/16rem);
