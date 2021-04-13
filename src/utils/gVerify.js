@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-11 20:42:32
- * @LastEditTime: 2021-04-11 21:52:25
+ * @LastEditTime: 2021-04-12 11:05:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\utils\gVerify.js
@@ -118,9 +118,9 @@ GVerify.prototype = {
 
   /** 验证验证码* */
   validate: function (code) {
-    var code = code.toLowerCase()
-    var v_code = this.options.code.toLowerCase()
-    if (code === v_code) {
+    code = code.toLowerCase()
+    var vCode = this.options.code.toLowerCase()
+    if (code === vCode) {
       return true
     } else {
       return false

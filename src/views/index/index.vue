@@ -30,10 +30,10 @@ export default {
       // svg
       // logo,
       dialogInSpace,
-      buttonIcon: buttonMic,
-      background,
+      // buttonIcon: buttonMic,
+      // background,
       // 遮罩层
-      opacity: 0.35,
+      // opacity: 0.35,
       // 按钮缩放
       shrink: '',
       // 录音时长
@@ -54,6 +54,13 @@ export default {
       // 不满10位要补0
       this.durationTime = num < 10 ? `0${num}` : `${num}`
     }
+    // 从路由获取状态
+    if (this.$route.params.status === 'recording') {
+      // alert('recording')
+      // 如果直接是recording的状态
+      this.handleMouseDown()
+      this.handleMouseUp()
+    }
   },
   computed: {
     ...mapGetters(['recorder', 'lang']),
@@ -61,15 +68,20 @@ export default {
     info () {
       const text = this.lang === 'CN' ? '轻触按钮， 留下你的声音~（最长15秒）' : 'Tap the button to start recording (maximum 15s)'
       return this.durationTime === 'NaN' ? text : `00:${this.durationTime}`
+    },
+    background () {
+      return this.status === 'beforeRecord' ? background : backgroundStop
+    },
+    opacity () {
+      return this.status === 'beforeRecord' ? 0.35 : 0.85
+    },
+    buttonIcon () {
+      return this.status === 'beforeRecord' ? buttonMic : buttonStop
     }
   },
   methods: {
     handleMouseDown () {
       if (this.status === 'beforeRecord') {
-        // 更换背景图
-        this.background = backgroundStop
-        // 改变遮罩透明度
-        this.opacity = 0.85
         // 改变按钮大小
         this.shrink = 'shrink'
       }
@@ -79,18 +91,19 @@ export default {
         // 恢复按钮大小
         setTimeout(() => {
           this.shrink = ''
-          this.buttonIcon = buttonStop
+          // this.buttonIcon = buttonStop
         }, 100)
         // 录音开始
         Recorder.getPermission().then(() => {
           console.log('开始录音')
           this.recorder.start().then(() => {
             this.drawRecord()
-          }, (error) => {
-            // 录音出错
-            console.log(`${error.name} : ${error.message}`)
+          }, () => {
+            // 已经开始过了，不用再开始了
+            this.drawRecord()
           }) // 开始录音
         }, (error) => {
+          // 获取权限出错
           alert(`${error.name} : ${error.message}`)
           console.log(`${error.name} : ${error.message}`)
         })

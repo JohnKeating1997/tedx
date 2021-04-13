@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-11 23:15:37
+ * @LastEditTime: 2021-04-12 21:34:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -15,29 +15,41 @@
     <!-- 卡片主体 -->
     <div id="card">
       <div class="left-block">
-        <div class="uploaded-img"></div>
+        <div class="uploaded-img" :style="{ 'backgroundImage' : 'url(' + uploadedImgURL + ')' }"></div>
         <div class="over-lay"></div>
         <div class="upload" @click="handleUploadImage">
+          <!-- 上传图片的input -->
+          <input type="file" class="img-input" accept="image/*" multiple="multiple" @change="uploadImg" ref="inputImg">
           <img :src="uploadButton" alt="" class="arrow">
           <p class="info">{{this.uploadPlaceholder}}</p>
         </div>
         <div class="buttons">
-          <img :src="refreshButton" alt="请耐心等待加载" class="button">
-          <img :src="playButton" alt="请耐心等待加载" class="button">
-          <img :src="deleteButton" alt="请耐心等待加载" class="button">
+          <img :src="refreshButton" alt="请耐心等待加载" class="button" @click="handleRefresh">
+          <img :src="playButton" alt="请耐心等待加载" class="button" @click="handlePlay">
+          <img :src="deleteButton" alt="请耐心等待加载" class="button" @click="handleDelete">
         </div>
       </div>
       <div class="right-block">
-        <p v-if="!userInput" @click="handleUserInputTitle" class="title">{{this.defaultTitle}}</p>
-        <input v-if="userInput" ref="inputTitle" type="text" class="title" :value="userTitle">
-        <div class="form-block">
-          <input type="text" :placeholder="namePlaceholder" class="form-data">
-          <input type="text" :placeholder="emailPlaceholder" class="form-data">
-          <input type="text" :placeholder="verifyCodePlaceholder" class="form-data short">
-        </div>
-        <!-- 验证码 -->
-        <p id="picyzm"></p>
-        <button class="submit">Submit | 提交</button>
+        <form action="">
+          <p v-if="!userInput || !userTitle" @click="handleUserInputTitle" class="title">{{this.defaultTitle}}</p>
+          <div class="title" ref="inputTitleContainer">
+            <input v-if="userInput" ref="inputTitle" type="text" v-model="userTitle" required>
+          </div>
+          <div class="form-block">
+            <div class="form-data user-name" ref="inputNameContainer">
+              <input type="text" v-model="userName" :placeholder="namePlaceholder" class="" required>
+            </div>
+            <div class="form-data user-email" ref="inputEmailContainer">
+              <input type="text" v-model="userEmail" :placeholder="emailPlaceholder" required>
+            </div>
+            <div class="form-data user-verifycode" ref="inputVeriycodeContainer">
+              <input type="text" v-model="userVerifyCode" :placeholder="verifyCodePlaceholder" required>
+            </div>
+          </div>
+          <!-- 验证码 -->
+          <p id="picyzm"></p>
+          <button class="submit" @click.prevent="handleSubmit">Submit | 提交</button>
+        </form>
       </div>
     </div>
   </div>
@@ -47,12 +59,37 @@
 import {mapGetters} from 'vuex'
 // 验证码组件
 import GVerify from '@/utils/gVerify.js'
+// 验证表单
+import validateForm from '@/utils/validate.js'
 // 图标
 import title from '@/assets/images/title-edit.svg'
 import uploadButton from '@/assets/images/upload.svg'
 import refreshButton from '@/assets/images/Button-refresh.svg'
 import playButton from '@/assets/images/Button-play.svg'
 import deleteButton from '@/assets/images/Button-delete.svg'
+// 默认封面
+import uploadedImgURL from '@/assets/videos/background-stop.jpg'
+// 提交给后端
+import axios from 'axios'
+import { commitUrl } from '@/utils/api'
+// const errorMsgCN = {
+//   title: '标题不能为空',
+//   name: '姓名/昵称不能为空',
+//   email: '邮箱格式错误',
+//   verificationCode: '验证码错误'
+// }
+// const errorMsgEN = {
+//   title: 'A title is requiered',
+//   name: 'Your name is requiered',
+//   email: 'Your email address is incorrect',
+//   verificationCode: 'Your Verification code is incorrect'
+// }
+const errorContainer = {
+  title: 'inputTitleContainer',
+  name: 'inputNameContainer',
+  email: 'inputEmailContainer',
+  verificationCode: 'inputVeriycodeContainer'
+}
 export default {
   name: 'Edit',
   data () {
@@ -63,16 +100,24 @@ export default {
       refreshButton,
       playButton,
       deleteButton,
+      // 用户上传的图片
+      uploadedImgURL,
       // 用户是否输入标题
       userInput: false,
+      /* 用户输入 */
       // 用户输入的标题:
       userTitle: '',
+      userName: '',
+      userEmail: '',
+      userVerifyCode: '',
+      // 提交的数据
+      options: {},
       // 验证码组件
       verifyCode: {}
     }
   },
   computed: {
-    ...mapGetters(['lang']),
+    ...mapGetters(['lang', 'recorder']),
     // 默认标题(提示文案)
     defaultTitle () {
       return this.lang === 'CN' ? '"点击此处输入标题"' : '"Tap to input title"'
@@ -104,12 +149,99 @@ export default {
   methods: {
     handleUploadImage () {
       console.log('handleUploadImage')
+      this.$refs.inputImg.click()
     },
     handleUserInputTitle () {
       this.userInput = true
       setTimeout(() => {
         this.$refs.inputTitle.focus()
       }, 0)
+    },
+    // 上传图片
+    uploadImg (event) {
+      const e = window.event || event
+      const oFile = e.target.files[0]
+      // console.log(oFile);
+      const imgMaxSize = 1024 * 1024 * 4 // 4MB
+      // 限制文件类型
+      if (['jpeg', 'png', 'gif', 'jpg'].indexOf(oFile.type.split('/')[1]) < 0) {
+        alert('仅可以上传图片格式文件')
+        return
+      }
+      // 限制大小
+      if (oFile.size > imgMaxSize) {
+        alert('文件最大为4MB')
+        return
+      }
+      // 展示上传图片
+      const newsrc = this.getObjectURL(oFile)
+      this.uploadedImgURL = newsrc
+      // document.getElementById('show').src = newsrc
+      // var data = new FormData()
+      // data.append('filesData', file)// 这里不管怎样，我决定还是用formdata的方式上传。
+      // $.post('约定地址', data, function (result) {
+      //   console.log(result)
+      // })
+    },
+    // 获取上传成功的图片的url
+    getObjectURL (file) {
+      var url = null
+      // 下面函数执行的效果是一样的，只是需要针对不同的浏览器执行不同的 js 函数而已
+      if (window.createObjectURL !== undefined) { // basic
+        url = window.createObjectURL(file)
+      } else if (window.URL !== undefined) { // mozilla(firefox)
+        url = window.URL.createObjectURL(file)
+      } else if (window.webkitURL !== undefined) { // webkit or chrome
+        url = window.webkitURL.createObjectURL(file)
+      }
+      return url
+    },
+
+    /* 录音部分 */
+    handleRefresh () {
+      this.recorder.stopPlay()
+      this.recorder.start().then(() => {
+        this.$router.push(this.$router.push({name: 'Index', params: {status: 'recording'}}))
+      })
+    },
+    handlePlay () {
+      console.log('播放录音')
+      this.recorder.play() // 播放录音
+    },
+    handleDelete () {
+      this.recorder.stopPlay()
+      this.$router.push(this.$router.push({name: 'Index'}))
+    },
+    // 提交表单信息
+    handleSubmit () {
+      console.log('submit')
+      if (this.verifyCode.validate(this.userVerifyCode)) {
+        this.options.title = this.userTitle
+        this.options.name = this.userName
+        this.options.email = this.userEmail
+        const result = validateForm(this.options)
+        let flag = true
+        for (const res in result) {
+          if (!result[res]) {
+            flag = false
+            this.$refs[errorContainer[res]].className += this.lang === 'CN' ? ' chinese error' : ' english error'
+            // alert(this.lang === 'CN' ? errorMsgCN[res] : errorMsgEN[res])
+          }
+        }
+        // 传输表单
+        if (flag) {
+          alert('表单验证成功！')
+        }
+      } else {
+        console.log(this.$refs.inputVeriycodeContainer.className)
+        this.$refs.inputVeriycodeContainer.className += this.lang === 'CN' ? ' chinese error' : ' english error'
+      }
+    },
+    // 上传数据
+    pushData () {
+      return new Promise((resolve, reject) => {
+        axios.post(commitUrl)
+      })
     }
   }
 }
@@ -158,7 +290,7 @@ export default {
         width: (160/16rem);
         height: (161/16rem);
         font-size: 0;
-        background-image: url('../../assets/videos/background-stop.jpg');
+        // background-image: url('../../assets/videos/background-stop.jpg');
         background-size: contain;
         position: absolute;
         left: (24/16rem);
@@ -183,6 +315,12 @@ export default {
         left: (24/16rem);
         top: (24/16rem);
         z-index: 4;
+        .img-input {
+          width: 100%;
+          height: 100%;
+          // background: #bfa;
+          visibility: hidden;
+        }
         .arrow {
           position: absolute;
           left: (64/16rem);
@@ -217,17 +355,41 @@ export default {
       float: left;
       position: relative;
       .title {
-        background: none;
-        border: 0;
         position: absolute;
         top: (20.5/16rem);
         left: (32/16rem);
-        text-align: left;
         font-size: (14/16rem);
-        color: #fff;
+        input {
+          background: none;
+          border: 0;
+          text-align: left;
+          font-size: (14/16rem);
+          color: #fff;
+        }
+        &.error.chinese:after{
+          content: '标题不能为空';
+          font-size: (8/16rem);
+          color: #e62a1f;
+          text-align: left;
+          position: absolute;
+          left: 0;
+          bottom: (-32/16rem);
+          width: (100/16rem);
+        }
+        &.error.english:after{
+          content: 'A title is requiered';
+          font-size: (8/16rem);
+          color: #e62a1f;
+          text-align: left;
+          position: absolute;
+          left: 0;
+          bottom: (-32/16rem);
+          width: (100/16rem);
+        }
       }
       .form-block {
         margin-top: (54.5/16rem);
+        margin-left: (32/16rem);
         .form-data {
             color: #fff;
             width: (240/16rem);
@@ -236,10 +398,79 @@ export default {
             border: 0;
             border-bottom: 1px solid #363636;
             margin-bottom: 9px;
-            font-size: (12/16rem);
-            &.short {
+            display: block;
+            position: relative;
+            input{
+              width: 100%;
+              height: 100%;
+              background: none;
+              border: none;
+              color: #fff;
+              font-size: (12/16rem);
+            }
+            &.error input{
+              color: #e62a1f;
+            }
+            &.user-verifycode {
               width: (148/16rem);
-              margin-left: (-92/16rem);
+              &.error.chinese:after{
+                content: '验证码错误';
+                font-size: (8/16rem);
+                color: #e62a1f;
+                text-align: left;
+                position: absolute;
+                left: 0;
+                bottom: (-16/16rem);
+              }
+              &.error.english:after{
+                content: 'Your Verification code is incorrect';
+                font-size: (8/16rem);
+                color: #e62a1f;
+                text-align: left;
+                position: absolute;
+                left: 0;
+                bottom: (-16/16rem);
+              }
+            }
+            &.user-name{
+              &.error.chinese:after{
+                content: '姓名/昵称不能为空';
+                font-size: (8/16rem);
+                color: #e62a1f;
+                text-align: left;
+                position: absolute;
+                left: 0;
+                bottom: (-16/16rem);
+              }
+              &.error.english:after{
+                content: 'Your name is requiered';
+                font-size: (8/16rem);
+                color: #e62a1f;
+                text-align: left;
+                position: absolute;
+                left: 0;
+                bottom: (-16/16rem);
+              }
+            }
+            &.user-email{
+              &.error.chinese:after{
+                content: '邮箱格式错误';
+                font-size: (8/16rem);
+                color: #e62a1f;
+                text-align: left;
+                position: absolute;
+                left: 0;
+                bottom: (-16/16rem);
+              }
+              &.error.english:after{
+                content: 'Your email address is incorrect';
+                font-size: (8/16rem);
+                color: #e62a1f;
+                text-align: left;
+                position: absolute;
+                left: 0;
+                bottom: (-16/16rem);
+              }
             }
         }
       }
@@ -247,13 +478,19 @@ export default {
         width: (76/16rem);
         height: (24/16rem);
         position: absolute;
-        bottom: (80/16rem);
+        bottom: (85/16rem);
         right: (32.5/16rem);
       }
       .submit{
         width: (240/16rem);
         height: (32/16rem);
         font-size: (12/16rem);
+        position: absolute;
+        left: (32/16rem);
+        bottom: (24.5/16rem);
+        background-color: #fff;
+        border: none;
+        box-shadow: none;
       }
     }
   }
