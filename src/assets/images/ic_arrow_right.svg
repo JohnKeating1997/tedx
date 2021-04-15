@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ic_arrow_right</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 0 1.000000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_arrow_right" transform="translate(-312.000000, -316.000000)" filter="url(#filter-1)">
+            <g transform="translate(319.000000, 323.000000) scale(-1, 1) rotate(-90.000000) translate(-319.000000, -323.000000) translate(312.000000, 316.000000)">
+                <path d="M10.7607868,6.08958767 L6.35345179,1.25422749 L7.61963857,2.84217094e-14 L14,7 L7.61963857,14 L6.35345179,12.7457725 L10.7607868,7.91041231 L3.49327259,7.91041231 L3.49327259,6.08958767 L10.7607868,6.08958767 L10.7607868,6.08958767 Z M0,7.91041231 L0,6.08958767 L1.7466363,6.08958767 L1.7466363,7.91041231 L0,7.91041231 Z" fill="#000000" fill-rule="nonzero" transform="translate(7.000000, 7.000000) rotate(-90.000000) translate(-7.000000, -7.000000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -43,7 +43,9 @@ export default {
       oCancas: null,
       ctx: null,
       // 录音状态，用来切换界面
-      status: 'beforeRecord'
+      status: 'beforeRecord',
+      // 用来计时15s
+      timer: null
     }
   },
   mounted () {
@@ -110,7 +112,7 @@ export default {
         // 状态切换到录音中
         this.status = 'recording'
         // 15s后自动停止录音，跳转
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           // 停止录音
           this.recorder.stop()
           // 跳转到编辑信息页面
@@ -119,6 +121,9 @@ export default {
       } else {
         // 停止录音
         this.recorder.stop()
+        // 清楚掉之前的setTimeOut
+        clearTimeout(this.timer)
+        this.timer = null
         // 跳转到编辑信息页面
         this.$router.push({path: '/edit'})
       }

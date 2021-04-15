@@ -45,12 +45,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #fff;
+  width: calc(min(100vmin*2,100vmax));
+  height: 100vmin;
 }
 #lang {
   position: absolute;
   top: (21/16rem);
   left: (20/16rem);
-  font-size: 14px;
+  font-size: (14/16rem);
   z-index: 100;
   span.selected{
     color: #fff;

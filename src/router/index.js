@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-08 17:01:07
- * @LastEditTime: 2021-04-13 15:59:31
+ * @LastEditTime: 2021-04-15 12:38:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\router\index.js
@@ -13,6 +13,7 @@ import Index from '@/views/index'
 import Recorder from '@/views/recorder'
 import Edit from '@/views/edit'
 import Success from '@/views/submit/success'
+import ErrorPage from '@/views/submit/error'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +37,11 @@ export default new Router({
       path: '/success',
       name: 'Success',
       component: Success
+    },
+    {
+      path: '/error',
+      name: 'Error',
+      component: ErrorPage
     },
     {
       path: '/recorder',

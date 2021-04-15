@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "html2canvas": "^1.0.0-rc.7",
     "js-audio-recorder": "^1.0.7",
     "lamejs": "^1.2.0",
     "less": "^4.1.1",

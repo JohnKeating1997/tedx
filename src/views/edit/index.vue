@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-13 15:56:38
+ * @LastEditTime: 2021-04-15 14:12:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -11,7 +11,7 @@
   <div id="view">
     <img :src="title" alt="请耐心等待加载" id="title">
     <!-- 底部装饰框 -->
-    <!-- <div id="border"></div> -->
+    <div id="border"></div>
     <!-- 卡片主体 -->
     <div id="card">
       <div class="left-block">
@@ -73,18 +73,7 @@ import uploadedImgURL from '@/assets/videos/background-stop.jpg'
 // 提交给后端
 import axios from 'axios'
 import url from '@/utils/api'
-// const errorMsgCN = {
-//   title: '标题不能为空',
-//   name: '姓名/昵称不能为空',
-//   email: '邮箱格式错误',
-//   verificationCode: '验证码错误'
-// }
-// const errorMsgEN = {
-//   title: 'A title is requiered',
-//   name: 'Your name is requiered',
-//   email: 'Your email address is incorrect',
-//   verificationCode: 'Your Verification code is incorrect'
-// }
+
 const errorContainer = {
   title: 'inputTitleContainer',
   name: 'inputNameContainer',
@@ -224,7 +213,7 @@ export default {
     handleRefresh () {
       this.recorder.stopPlay()
       this.recorder.start().then(() => {
-        this.$router.push(this.$router.push({name: 'Index', params: {status: 'recording'}}))
+        this.$router.push({name: 'Index', params: {status: 'recording'}})
       })
     },
     handlePlayStop () {
@@ -242,7 +231,7 @@ export default {
     },
     handleDelete () {
       this.recorder.stopPlay()
-      this.$router.push(this.$router.push({name: 'Index'}))
+      this.$router.push({name: 'Index'})
     },
     // 提交表单信息
     async handleSubmit () {
@@ -283,8 +272,14 @@ export default {
           }
           axios.post(url.commitUrl, this.formData).then((res) => {
             console.log(res)
+            if (res.status === '200') {
+              this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
+              return
+            }
+            this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
           }).catch((err) => {
             console.log(err)
+            this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
           })
         }
       } else {
@@ -341,8 +336,8 @@ export default {
 
 <style lang="less" scoped>
   #view{
-    width:100vmax;
-    height:100vmin;
+    width:100%;
+    height:100%;
     background-image: url('../../assets/images/Text-background.svg');
     margin: 0 auto;
     background-size: cover;
@@ -501,7 +496,7 @@ export default {
             background: none;
             border: 0;
             border-bottom: 1px solid #363636;
-            margin-bottom: 9px;
+            margin-bottom: (13/16rem);
             display: block;
             position: relative;
             input{
@@ -511,6 +506,8 @@ export default {
               border: none;
               color: #fff;
               font-size: (12/16rem);
+              height: (32/16rem);
+              padding: 0;
             }
             &.error input{
               color: #e62a1f;
@@ -582,7 +579,8 @@ export default {
         width: (76/16rem);
         height: (24/16rem);
         position: absolute;
-        bottom: (89/16rem);
+        // bottom: (89/16rem);
+        top: (153/16rem);
         right: (32.5/16rem);
       }
       .submit{

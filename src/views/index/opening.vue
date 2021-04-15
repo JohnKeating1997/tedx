@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-09 16:47:01
- * @LastEditTime: 2021-04-12 20:04:01
+ * @LastEditTime: 2021-04-14 11:03:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\index\opening.vue
@@ -42,8 +42,8 @@ export default {
 
 <style lang="less" scoped>
   #view{
-    width:100vmax;
-    height:100vmin;
+    width:calc(min(100vmin*2,100vmax));
+    height:100%;
     #opening-gif{
       height:100%;
     }
