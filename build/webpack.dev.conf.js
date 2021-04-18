@@ -11,7 +11,7 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
 // https 服务开启
-const https = require('https')
+// const https = require('https')
 const fs = require('fs')
 
 const HOST = process.env.HOST

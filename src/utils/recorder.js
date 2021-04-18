@@ -1,11 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2021-04-10 16:05:18
- * @LastEditTime: 2021-04-13 14:57:42
- * @LastEditors: your name
+ * @LastEditTime: 2021-04-15 19:46:08
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\utils\recorder.js
  */
+// 创建录音实例
 import Recorder from 'js-audio-recorder'
 const recorder = new Recorder({
   sampleBits: 8, // 采样位数，支持 8 或 16，默认是16

@@ -104,7 +104,7 @@ export default {
 <style lang="less" scoped>
   #view {
     width:calc(min(100vmin*2,100vmax));
-    height:100vmin;
+    height:calc(min(100vmin, 100vmax / 2));
     background-image: url('../../assets/images/Grid2.svg');
     background-size: cover;
     z-index: 1;

@@ -13,21 +13,8 @@ import '@/style/global.less'
 // 初始化页面大小
 resizeScreen()
 adjustFontSize()
-let originalOrientation = window.orientation
+let ratio = window.innerWidth / window.innerHeight
 
-// 每次改变页面大小触发
-window.onresize = () => {
-  if (window.orientation !== originalOrientation) {
-    // alert('转向')
-    // 如果转向才会重新计算页面大小
-    resizeScreen()
-    adjustFontSize()
-    // 更新orientation
-    originalOrientation = window.orientation
-    // 重新加载页面才能生效
-    window.location.reload()
-  }
-}
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -38,3 +25,32 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+// let flag = true
+// 每次改变页面大小触发
+window.onresize = () => {
+  // alert('window.availHeight: ' + window.screen.availHeight)
+  // alert('window.innerHeight: ' + window.innerHeight)
+  const curRatio = window.innerWidth / window.innerHeight
+  if (curRatio !== ratio) {
+    if (curRatio < 1 && window.innerWidth < 500) return
+    if (curRatio > 1 && window.innerHeight < 150) return
+    // alert('window.availHeight: ' + window.screen.availHeight)
+    // 如果转向才会重新计算页面大小
+    try {
+      resizeScreen()
+      adjustFontSize()
+      // 更新orientation
+      ratio = window.innerWidth / window.innerHeight
+      // 重新加载页面才能生效
+      window.location.reload()
+      // alert('转向')
+      // console.log(app.$forceUpdate)
+      // app.$forceUpdate()
+      // const tmp = parseFloat(getComputedStyle(document.documentElement, null).height.split('p')[0])
+      // document.documentElement.style.height = flag ? `${tmp - 1}px` : `${tmp + 1}px`
+      // flag = !flag
+    } catch (err) {
+      alert(err)
+    }
+  }
+}

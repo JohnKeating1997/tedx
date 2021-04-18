@@ -45,8 +45,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #fff;
-  width: calc(min(100vmin*2,100vmax));
-  height: 100vmin;
+  width:calc(min(100vmin*2,100vmax));
+  height:calc(min(100vmin, 100vmax / 2));
+  margin: 0 auto;
 }
 #lang {
   position: absolute;

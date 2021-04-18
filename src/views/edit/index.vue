@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-15 14:12:27
+ * @LastEditTime: 2021-04-16 14:42:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -70,13 +70,15 @@ import stopButton from '@/assets/images/Button-stop.svg'
 import deleteButton from '@/assets/images/Button-delete.svg'
 // 默认封面
 import uploadedImgURL from '@/assets/videos/background-stop.jpg'
+// wav压缩成mp3
+// import {convertToMp3} from '@/utils/wav2mp3.js'
 // 提交给后端
 import axios from 'axios'
 import url from '@/utils/api'
 
 const errorContainer = {
   title: 'inputTitleContainer',
-  name: 'inputNameContainer',
+  nickName: 'inputNameContainer',
   email: 'inputEmailContainer',
   verificationCode: 'inputVeriycodeContainer'
 }
@@ -243,7 +245,7 @@ export default {
         this.$refs.inputVeriycodeContainer.className = className
         // 读取表单信息
         this.options.title = this.userTitle
-        this.options.name = this.userName
+        this.options.nickName = this.userName
         this.options.email = this.userEmail
         const result = validateForm(this.options)
         let flag = true
@@ -272,7 +274,7 @@ export default {
           }
           axios.post(url.commitUrl, this.formData).then((res) => {
             console.log(res)
-            if (res.status === '200') {
+            if (res.status === 200) {
               this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
               return
             }
@@ -296,10 +298,11 @@ export default {
         this.recorder.pause() // 暂停录音
         // this.timer = null
         console.log('上传录音')// 上传录音
-        const blob = this.recorder.getWAVBlob()// 获取wav格式音频数据
+        const wavBlob = this.recorder.getWAV()// 获取wav格式音频数据
+        // const mp3blob = convertToMp3(wavBlob, this.recorder)
         // 此处获取到blob对象后需要设置fileName满足当前项目上传需求，其它项目可直接传把blob作为file塞入formData
-        const newbolb = new Blob([blob], { type: 'audio/wav' })
-        const fileOfBlob = new File([newbolb], `${new Date().getTime()}_${this.options.name}.wav`)
+        const newblob = new Blob([wavBlob], { type: 'audio/wav' })
+        const fileOfBlob = new File([newblob], `${new Date().getTime()}_${this.options.nickName}.wav`)
         this.formData.append('audio', fileOfBlob)
         resolve(true)
       })
@@ -336,8 +339,8 @@ export default {
 
 <style lang="less" scoped>
   #view{
-    width:100%;
-    height:100%;
+    width:calc(min(100vmin*2,100vmax));
+    height:calc(min(100vmin, 100vmax / 2));
     background-image: url('../../assets/images/Text-background.svg');
     margin: 0 auto;
     background-size: cover;

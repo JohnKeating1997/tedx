@@ -43,7 +43,7 @@ export default {
 <style lang="less" scoped>
   #view{
     width:calc(min(100vmin*2,100vmax));
-    height:100%;
+    height:calc(min(100vmin, 100vmax / 2));
     #opening-gif{
       height:100%;
     }

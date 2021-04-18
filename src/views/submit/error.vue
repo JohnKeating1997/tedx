@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:42:09
- * @LastEditTime: 2021-04-15 13:01:19
+ * @LastEditTime: 2021-04-16 17:00:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\submit\error.vue
@@ -34,6 +34,10 @@ export default {
   methods: {
     handleRetry () {
       console.log('retry')
+      // const test = document.getElementById('view')
+      // debugger
+      // alert(window.getComputedStyle(test, null).width)
+      // alert(window.getComputedStyle(test, null).height)
       this.$route.params.retry()
     }
   }
@@ -43,7 +47,7 @@ export default {
 <style lang="less" scoped>
   #view {
     width:calc(min(100vmin*2,100vmax));
-    height:100vmin;
+    height:calc(min(100vmin, 100vmax / 2));
     background-image: url('../../assets/images/Text-background.svg');
     background-size: cover;
     z-index: 1;
@@ -51,6 +55,7 @@ export default {
     .error {
       width: (258/16rem);
       height: (40/16rem);
+      display: block;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -59,8 +64,10 @@ export default {
     .error-info {
       font-size: (20/16rem);
       font-weight: 700;
+      display: block;
       position: absolute;
-      top: (239/16rem);
+      top: (280/16rem);
+      // bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       .error-info2 {

@@ -55,6 +55,7 @@ export default {
       const num = Math.ceil(params.duration)
       // 不满10位要补0
       this.durationTime = num < 10 ? `0${num}` : `${num}`
+      alert(params.duration)
     }
     // 从路由获取状态
     if (this.$route.params.status === 'recording') {
@@ -99,9 +100,12 @@ export default {
         Recorder.getPermission().then(() => {
           console.log('开始录音')
           this.recorder.start().then(() => {
+            alert('录音成功！')
+            alert(this.recorder)
             this.drawRecord()
-          }, () => {
+          }, (error) => {
             // 已经开始过了，不用再开始了
+            alert(`异常了,${error.name}:${error.message}`)
             this.drawRecord()
           }) // 开始录音
         }, (error) => {
@@ -180,7 +184,7 @@ export default {
 <style lang="less" scoped>
   #view{
     width:calc(min(100vmin*2,100vmax));
-    height:100vmin;
+    height:calc(min(100vmin, 100vmax / 2));
     margin: 0 auto;
     background-size: cover;
     background-repeat: no-repeat;
