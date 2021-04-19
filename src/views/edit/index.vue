@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-16 14:42:11
+ * @LastEditTime: 2021-04-20 00:57:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -9,6 +9,7 @@
 
 <template>
   <div id="view">
+    <audio id="pseudo-player" :src="$route.params.playURL" ref="pseudoPlayer"></audio>
     <img :src="title" alt="请耐心等待加载" id="title">
     <!-- 底部装饰框 -->
     <div id="border"></div>
@@ -19,7 +20,7 @@
         <div class="over-lay"></div>
         <div class="upload" @click="handleUploadImage">
           <!-- 上传图片的input -->
-          <input type="file" class="img-input" accept="image/*" multiple="multiple" @change="uploadImg" ref="inputImg">
+          <input type="file" class="img-input" accept="image/*" @change="uploadImg" ref="inputImg">
           <img :src="uploadButton" alt="" class="arrow">
           <p class="info">{{this.uploadPlaceholder}}</p>
         </div>
@@ -109,7 +110,11 @@ export default {
       // 验证码组件
       verifyCode: {},
       // 音频是否正在播放
-      audioPlayStatus: false
+      audioPlayStatus: false,
+      // 音频时长
+      duration: 0,
+      // 音频blob对象
+      blob: null
     }
   },
   computed: {
@@ -145,20 +150,22 @@ export default {
       width: `${76 / 16 * fontSize}`,
       height: `${24 / 16 * fontSize}`
     })
-    // 如果已经有缓存的用户信息，直接拿来用
-    for (const i in this.userInfo) {
-      if (this.userInfo[i]) {
-        this[i] = this.userInfo[i]
-      }
+    // 保存路由传进来的播放器属性
+    if(this.$route.params.blob) {
+      this.blob = this.$route.params.blob
     }
-    // 每5s缓存一次用户输入信息
-    // setInterval(() => {
-    //   console.log('save')
-    //   this.saveTempUserInfo()
-    // }, 5000)
+    if (this.$route.params.duration) {
+      this.duration = this.$route.params.duration
+    }
   },
-  watch: {
-
+  activated () {
+    // 保存路由传进来的播放器属性
+    if(this.$route.params.blob) {
+      this.blob = this.$route.params.blob
+    }
+    if (this.$route.params.duration) {
+      this.duration = this.$route.params.duration
+    }
   },
   methods: {
     handleUploadImage () {
@@ -213,26 +220,50 @@ export default {
 
     /* 录音部分 */
     handleRefresh () {
-      this.recorder.stopPlay()
-      this.recorder.start().then(() => {
-        this.$router.push({name: 'Index', params: {status: 'recording'}})
-      })
+      // this.recorder.stopPlay()
+      // 停止播放
+      // this.$refs.pseudoPlayer.pause()
+      // 切换状态不然下次进来还是正在播放中
+      this.audioPlayStatus = false
+      // 释放资源
+      try {
+        // ios上貌似不支持revokeObjectURL
+        (window.URL||webkitURL).revokeObjectURL(this.$route.params.playURL)
+      } catch (err) {
+        console.log(err)
+      }
+      // 重新进入编辑界面
+      this.$router.push({name: 'Index', params: {status: 'recording'}})
+      // this.recorder.start().then(() => {
+      //   this.$router.push({name: 'Index', params: {status: 'recording'}})
+      // })
     },
     handlePlayStop () {
       if (this.audioPlayStatus) {
         console.log('停止播放')
-        this.recorder.stopPlay() // 停止播放
+        this.audioPlayStatus = false
+        this.$refs.pseudoPlayer.pause()
         return
       }
       console.log('播放录音')
       this.audioPlayStatus = true
-      this.recorder.play() // 播放录音
-      setTimeout(() => {
+      // this.recorder.play() // 播放录音
+      this.$refs.pseudoPlayer.play()
+      this.$refs.pseudoPlayer.addEventListener('ended', () => {
         this.audioPlayStatus = false
-      }, this.recorder.duration * 1000)
+      }, false)
     },
     handleDelete () {
-      this.recorder.stopPlay()
+      // 停止播放
+      // this.$refs.pseudoPlayer.pause()
+      try {
+        // ios上貌似不支持revokeObjectURL
+        (window.URL||webkitURL).revokeObjectURL(this.$route.params.playURL)
+      } catch (err) {
+        console.log(err)
+      }
+      // 切换状态不然下次进来还是正在播放中
+      this.audioPlayStatus = false
       this.$router.push({name: 'Index'})
     },
     // 提交表单信息
@@ -272,17 +303,18 @@ export default {
           for (const index in this.options) {
             this.formData.append(index, this.options[index])
           }
-          axios.post(url.commitUrl, this.formData).then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
-              return
-            }
-            this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
-          }).catch((err) => {
-            console.log(err)
-            this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
-          })
+          this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
+          // axios.post(url.commitUrl, this.formData).then((res) => {
+          //   console.log(res)
+          //   if (res.status === 200) {
+          //     this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
+          //     return
+          //   }
+          //   this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
+          // }).catch((err) => {
+          //   console.log(err)
+          //   this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
+          // })
         }
       } else {
         // 验证码错误提示
@@ -291,18 +323,20 @@ export default {
     },
     appendAudio () {
       return new Promise((resolve, reject) => {
-        if (this.recorder == null || this.recorder.duration === 0) {
+        if (this.duration === 0 || typeof this.duration !== "number") {
           reject(new Error(this.lang === 'CN' ? '请先录音' : 'please record first'))
           return
         }
-        this.recorder.pause() // 暂停录音
+        // this.recorder.pause() // 暂停录音
+        // 停止播放
+        this.handlePlayStop()
         // this.timer = null
         console.log('上传录音')// 上传录音
-        const wavBlob = this.recorder.getWAV()// 获取wav格式音频数据
+        const wavBlob = this.blob// 获取wav格式音频数据
         // const mp3blob = convertToMp3(wavBlob, this.recorder)
         // 此处获取到blob对象后需要设置fileName满足当前项目上传需求，其它项目可直接传把blob作为file塞入formData
-        const newblob = new Blob([wavBlob], { type: 'audio/wav' })
-        const fileOfBlob = new File([newblob], `${new Date().getTime()}_${this.options.nickName}.wav`)
+        const newblob = new Blob([wavBlob], { type: 'audio/mp3' })
+        const fileOfBlob = new File([newblob], `${new Date().getTime()}_${this.options.nickName}.mp3`)
         this.formData.append('audio', fileOfBlob)
         resolve(true)
       })
@@ -323,16 +357,6 @@ export default {
         // axios.post(commitUrl)
       })
     }
-    // 缓存用户信息
-    // saveTempUserInfo () {
-    //   const tmp = {}
-    //   // debugger
-    //   if (this.uploadedImgURL) tmp.uploadedImgURL = this.uploadedImgURL
-    //   if (this.userTitle) tmp.userTitle = this.userTitle
-    //   if (this.userName) tmp.userName = this.userName
-    //   if (this.userEmail) tmp.userEmail = this.userEmail
-    //   this.saveFormData(tmp)
-    // }
   }
 }
 </script>

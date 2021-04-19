@@ -7,7 +7,7 @@
  * @FilePath: \tedx\src\store\getters.js
  */
 const getters = {
-  recorder: state => state.recorder.recorderInstance,
+  // recorder: state => state.recorder.recorderInstance,
   lang: state => state.language.lang
   // userInfo: state => state.userInfo
 }

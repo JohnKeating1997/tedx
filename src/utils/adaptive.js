@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-09 16:25:13
- * @LastEditTime: 2021-04-16 23:22:10
+ * @LastEditTime: 2021-04-19 13:41:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\utils\adaptive.js
@@ -21,7 +21,7 @@ function getFontSize (ele) {
   const realWidth = Math.min(width, ratio * height)
   // alert(`width`)
   const fontSize = realWidth * designFontSize / designWidth
-  console.log('adaptive.js width: ', width)
+  console.log('adaptive.js html width: ', width)
   console.log('adaptive.js realWidth: ', realWidth)
   console.log('adaptive.js rem: ', fontSize)
   return fontSize
@@ -29,7 +29,7 @@ function getFontSize (ele) {
 // 将html元素的fontSize设置为根据屏幕大小动态计算出的值
 function adjustFontSize () {
   // 根据计算结果设置rem
-  const htmlEle = document.querySelector('html')
+  const htmlEle = document.documentElement
   // 真正装页面的容器
   // const container = document.getElementById('view')
   // 根据container的宽度计算fontSize

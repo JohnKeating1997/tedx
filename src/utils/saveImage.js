@@ -1,12 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-04-15 10:01:50
- * @LastEditTime: 2021-04-15 12:34:38
+ * @LastEditTime: 2021-04-19 23:40:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\utils\savaImage.js
  */
 import html2canvas from 'html2canvas'
+import resizeScreen from '@/utils/landscape.js'
 export const longPress = (dom, fn) => {
   let timeout = 0
   // const $this = this
@@ -38,6 +39,7 @@ const canvas2Image = (canvas, width, height) => {
 }
 
 export const saveImg = async (dom) => {
+  resizeScreen('landscape')
   // 创建一个新的canvas
   const Canvas = document.createElement('canvas')
   const width = 264 // 设计宽
@@ -53,12 +55,13 @@ export const saveImg = async (dom) => {
   Canvas.height = height * scale * 2
   Canvas.getContext('2d').scale(scale * 2, scale * 2)
   // 获取dom位置
-  const rect = dom.getBoundingClientRect()
-
+  // const rect = dom.getBoundingClientRect()
+  const ratio = parseFloat(document.documentElement.style.fontSize.split('p')[0]) / 16
+  console.log('ratio',ratio)
   // 转成canvas对象
   const canvas = await html2canvas(dom, {
-    x: rect.left,
-    y: rect.top,
+    x: 418 * ratio,
+    y: 32 * ratio,
     canvas: Canvas,
     scale,
     // scrollY: 0,
@@ -77,6 +80,7 @@ export const saveImg = async (dom) => {
   // canvas转化为图片
   const img = canvas2Image(canvas, canvas.width, canvas.height)
   // console.log(img.src)
+  resizeScreen('portrait')
   return img.src
   // document.body.appendChild(img)
   // img.style.cssText = 'width:100%;height:100%;position:absolute;top:0;left:0;right:0;bottom:0;opacity:0;'

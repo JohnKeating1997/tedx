@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:42:09
- * @LastEditTime: 2021-04-16 17:00:30
+ * @LastEditTime: 2021-04-19 16:28:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\submit\error.vue
@@ -46,11 +46,13 @@ export default {
 
 <style lang="less" scoped>
   #view {
-    width:calc(min(100vmin*2,100vmax));
-    height:calc(min(100vmin, 100vmax / 2));
+    // width:calc(min(100vmin*2,100vmax));
+    // height:calc(min(100vmin, 100vmax / 2));
+    width: 100%;
+    height: 100%;
     background-image: url('../../assets/images/Text-background.svg');
     background-size: cover;
-    z-index: 1;
+    // z-index: 1;
     position: absolute;
     .error {
       width: (258/16rem);

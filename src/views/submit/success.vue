@@ -1,13 +1,16 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:58
- * @LastEditTime: 2021-04-15 12:35:24
+ * @LastEditTime: 2021-04-20 00:47:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\submit\success.vue
 -->
 <template>
   <div id="view">
+    <div id="rendering" v-if="canvasRendering">
+      <img src="../../assets/images/loading.gif" alt="">
+    </div>
     <div id="button-home" @click="$router.push({name: 'Index'})"></div>
     <div id="left-card">
       <div class="thanks-info" :style="{'width': thanksInfoAttributes.width, 'height' : thanksInfoAttributes.height, 'backgroundImage' : thanksInfoAttributes.backgroundImage}"></div>
@@ -21,16 +24,19 @@
           <span>{{this.timeString}}</span>
         </div>
       </div>
-      <img class="cover" src="../../assets/videos/background-stop.jpg" alt="">
+      <img class="cover" src="../../assets/images/background-card.png" alt="">
       <div class="QRCode"></div>
-      <img class="dialogue" src="../../assets/images/Dialogueinspace.svg">
-      <img src="../../assets/images/Logo-black.svg" alt="" class="logo">
+      <!-- <img class="dialogue" src="../../assets/images/Dialogueinspace.svg">
+      <img src="../../assets/images/Logo-black.svg" alt="" class="logo"> -->
     </div>
-    <img v-if="savedRightCard" id="saved-right-card" :src="savedRightCard" alt="">
+    <!-- <img v-if="savedRightCard" id="saved-right-card" :src="savedRightCard" alt=""> -->
     <div id="save-tips">
       <span>{{saveTips}}</span>
       <img src='../../assets/images/ic_arrow_right.svg'>
     </div>
+    <!-- <div id="exception-tips" @click="handleException">
+      <span>{{exceptionTips}}</span>
+    </div> -->
     <div id="copywrite">
       <img src='../../assets/images/logo em.svg'>
       <span>{{copyright}}</span>
@@ -53,7 +59,9 @@ export default {
       thanksInfoCN,
       thanksInfoEN,
       test,
-      savedRightCard: null
+      savedRightCard: null,
+      // canvas是否在渲染
+      canvasRendering: false
     }
   },
   computed: {
@@ -81,6 +89,9 @@ export default {
     saveTips () {
       return this.lang === 'CN' ? '长按即可保存碎片 ' : 'Tap to save fragment '
     },
+    exceptionTips () {
+      return this.lang === 'CN' ? '如碎片无法正常显示，点击这里并手动截图' : 'if the fragment doesn\'t display properly, tap here and take screenshots manually'
+    },
     copyright () {
       return this.lang === 'CN' ? '本项目由不亦乐乎科技（杭州）提供技术支持.' : 'Powered by Hangzhou EnjoyMusic Technology.'
     },
@@ -90,13 +101,19 @@ export default {
     }
   },
   methods: {
-    // async handleDownload () {
-    //   // 保存url
-    //   this.savedRightCard = await saveImg(this.$refs.rightCard)
-    // }
+    async handleDownload () {
+      // 保存url
+      this.savedRightCard = await saveImg(this.$refs.rightCard)
+    },
+    handleException () {
+      this.savedRightCard = null
+    }
   },
-  async mounted () {
-    this.savedRightCard = await saveImg(this.$refs.rightCard)
+  mounted () {
+    // saveImg(this.$refs.rightCard).then( (url) => {
+    //   this.savedRightCard = url
+    //   this.canvasRendering = false;
+    // })
   }
 }
 </script>
@@ -109,6 +126,20 @@ export default {
     background-size: cover;
     z-index: 1;
     position: absolute;
+    #rendering {
+      width: (400/16rem);
+      height: 100%;
+      background: #000;
+      position: absolute;
+      top: 0;
+      z-index: 10;
+      img {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+      }
+    }
     #button-home {
       width: (36/16rem);
       height: (36/16rem);
@@ -148,9 +179,12 @@ export default {
       left: (418/16rem);
       top: (32/16rem);
       .cover {
-        width: (232/16rem);
-        height: (232/16rem);
-        padding: (16/16rem);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        // padding: (16/16rem);
+        z-index: 2;
         pointer-events:none;
       }
       .QRCode {
@@ -158,7 +192,9 @@ export default {
         height: (43/16rem);
         background: #666;
         position: absolute;
+        z-index: 3;
         left: (16/16rem);
+        top:(263/16rem);
       }
       .dialogue {
         width: (176.62/16rem);
@@ -178,6 +214,7 @@ export default {
         position : absolute;
         top:(32/16rem);
         left:(28/16rem);
+        z-index: 3;
         .user-title {
           font-size: (14/16rem);
           font-weight: 700;
@@ -221,6 +258,16 @@ export default {
         top:(1.5/16rem);
       }
     }
+    // #exception-tips {
+    //   position: absolute;
+    //   left: (71/16rem);
+    //   top: (340/16rem);
+    //   font-size: (14/16rem);
+    //   width: (300/16rem);
+    //   text-align: left;
+    //   height: (20/16rem);
+    //   line-height: (20/16rem);
+    // }
     #copywrite {
       position: absolute;
       left: (71/16rem);

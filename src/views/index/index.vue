@@ -8,21 +8,30 @@
     ></div>
     <!-- <img id="logo" :src="logo" alt="图片加载中"> -->
     <img id="dialog" :src="dialogInSpace" alt="图片加载中">
+    <div id="wave" :style="{ 'backgroundImage' : 'url(' + waveGif + ')' }"></div>
     <img id="button-mic" :class="shrink" :src="buttonIcon" alt="图片加载中" @mousedown="handleMouseDown" @mouseup="handleMouseUp">
+    <p id="infoLeft">{{infoLeft}}</p>
+    <p id="infoRight">{{infoRight}}</p>
     <p id="info" :class="this.lang === 'CN' ? 'chinese' : 'english'">{{info}}</p>
-    <canvas id="canvas" width="754" height="98"></canvas>
   </div>
 </template>
 
 <script>
 import background from '@/assets/videos/background.gif'
 import backgroundStop from '@/assets/videos/background-stop.jpg'
-// import logo from '@/assets/images/TEDxHangzhou Logo Copy 2.svg'
+import wave from '@/assets/images/wave.gif'
 import dialogInSpace from '@/assets/images/#DialogueInSpace.svg'
 import buttonMic from '@/assets/images/Button-mic.svg'
 import buttonStop from '@/assets/images/Button-stop.svg'
-import Recorder from 'js-audio-recorder'
 import { mapGetters } from 'vuex'
+import Recorder from 'recorder-core'
+
+//需要使用到的音频格式编码引擎的js文件统统加载进来
+import 'recorder-core/src/engine/mp3'
+import 'recorder-core/src/engine/mp3-engine'
+
+//以上三个也可以合并使用压缩好的recorder.xxx.min.js
+//比如 import Recorder from 'recorder-core/recorder.mp3.min' //已包含recorder-core和mp3格式支持
 export default {
   name: 'Index',
   data () {
@@ -45,18 +54,20 @@ export default {
       // 录音状态，用来切换界面
       status: 'beforeRecord',
       // 用来计时15s
-      timer: null
+      timer: null,
+      // rec实例
+      rec: null,
+      wave: null
     }
   },
   mounted () {
-    this.startCanvas()
+    // this.startCanvas()
     // 获取录音时长的勾子
-    this.recorder.onprogress = (params) => {
-      const num = Math.ceil(params.duration)
-      // 不满10位要补0
-      this.durationTime = num < 10 ? `0${num}` : `${num}`
-      alert(params.duration)
-    }
+    // this.recorder.onprogress = (params) => {
+    //   const num = Math.ceil(params.duration)
+    //   // 不满10位要补0
+    //   this.durationTime = num < 10 ? `0${num}` : `${num}`
+    // }
     // 从路由获取状态
     if (this.$route.params.status === 'recording') {
       // alert('recording')
@@ -69,8 +80,17 @@ export default {
     ...mapGetters(['recorder', 'lang']),
     // 波形图下方的info文案
     info () {
-      const text = this.lang === 'CN' ? '轻触按钮， 留下你的声音~（最长15秒）' : 'Tap the button to start recording (maximum 15s)'
-      return this.durationTime === 'NaN' ? text : `00:${this.durationTime}`
+      if (this.durationTime === 'NaN') {
+        return ''
+      }
+      const num = this.durationTime < 10 ? `00:0${this.durationTime}` : `00:${this.durationTime}`
+      return num
+    },
+    infoLeft () {
+      return this.lang === 'CN' ? '轻触按钮， ' : 'Tap the button'
+    },
+    infoRight () {
+      return this.lang === 'CN' ? '留下你的声音~（最长15秒）' : 'to start recording (maximum 15s)'
     },
     background () {
       return this.status === 'beforeRecord' ? background : backgroundStop
@@ -80,6 +100,9 @@ export default {
     },
     buttonIcon () {
       return this.status === 'beforeRecord' ? buttonMic : buttonStop
+    }, 
+    waveGif () {
+      return this.status === 'beforeRecord' ? '' : wave
     }
   },
   methods: {
@@ -97,86 +120,78 @@ export default {
           // this.buttonIcon = buttonStop
         }, 100)
         // 录音开始
-        Recorder.getPermission().then(() => {
-          console.log('开始录音')
-          this.recorder.start().then(() => {
-            alert('录音成功！')
-            alert(this.recorder)
-            this.drawRecord()
-          }, (error) => {
-            // 已经开始过了，不用再开始了
-            alert(`异常了,${error.name}:${error.message}`)
-            this.drawRecord()
-          }) // 开始录音
-        }, (error) => {
-          // 获取权限出错
-          alert(`${error.name} : ${error.message}`)
-          console.log(`${error.name} : ${error.message}`)
+        this.recOpen(() => {
+          this.recStart()
+          alert('开始录音成功')
+          // 状态切换到录音中
+          this.status = 'recording'
+          // 15s后自动停止录音，跳转
+          this.timer = setTimeout(() => {
+            // 停止录音,生成音频url并跳转到编辑页面
+            this.recStop()
+          }, 16000)
         })
-        // 状态切换到录音中
-        this.status = 'recording'
-        // 15s后自动停止录音，跳转
-        this.timer = setTimeout(() => {
-          // 停止录音
-          this.recorder.stop()
-          // 跳转到编辑信息页面
-          this.$router.push({path: '/edit'})
-        }, 15000)
       } else {
-        // 停止录音
-        this.recorder.stop()
         // 清楚掉之前的setTimeOut
         clearTimeout(this.timer)
         this.timer = null
-        // 跳转到编辑信息页面
-        this.$router.push({path: '/edit'})
+        // 停止录音,生成音频url并跳转到编辑页面
+        this.recStop()
       }
     },
-    // 波浪图配置
-    startCanvas () {
-      this.oCanvas = document.getElementById('canvas')
-      this.ctx = this.oCanvas.getContext('2d')
+    // 打开录音机
+    recOpen (success) {
+      this.rec=Recorder({
+      type:"mp3",sampleRate:16000,bitRate:16 //mp3格式，指定采样率hz、比特率kbps，其他参数使用默认配置；注意：是数字的参数必须提供数字，不要用字符串；需要使用的type类型，需提前把格式支持文件加载进来，比如使用wav格式需要提前加载wav.js编码引擎
+      ,onProcess:(buffers,powerLevel,bufferDuration,bufferSampleRate,newBufferIdx,asyncEnd) => {
+          // console.log(buffers)
+          //录音实时回调，大约1秒调用12次本回调
+          //可利用extensions/waveview.js扩展实时绘制波形
+          //可利用extensions/sonic.js扩展实时变速变调，此扩展计算量巨大，onProcess需要返回true开启异步模式
+      }
+      })
+      this.rec.open( () => {
+        success && success()
+      }, function (msg, isUserNotAllow){
+          console.log((isUserNotAllow?"UserNotAllow，":"")+"无法录音:"+msg)
+      })
     },
-    drawRecord () {
-      // 用requestAnimationFrame稳定60fps绘制
-      this.drawRecordId = window.requestAnimationFrame(this.drawRecord)
-      // 清空画布
-      this.ctx.clearRect(0, 0, this.oCanvas.width, this.oCanvas.height)
-      // 实时获取音频大小数据
-      let dataArray = this.recorder.getRecordAnalyseData()
-      let bufferLength = dataArray.length
-
-      // 填充背景色
-      this.ctx.fillStyle = 'rgba(0,0,0,0)'
-      this.ctx.fillRect(0, 0, this.oCanvas.width, this.oCanvas.height)
-
-      // 设定波形绘制颜色
-      this.ctx.lineWidth = 1
-      this.ctx.strokeStyle = '#fff'
-
-      this.ctx.beginPath()
-
-      var sliceWidth = this.oCanvas.width * 1.0 / bufferLength // 一个点占多少位置，共有bufferLength个点要绘制
-      var x = 0 // 绘制点的x轴位置
-
-      for (var i = 0; i < bufferLength; i++) {
-        var v = dataArray[i] / 128.0
-        var y = v * this.oCanvas.height / 2
-
-        if (i === 0) {
-          // 第一个点
-          this.ctx.moveTo(x, y)
+    recStart(){//打开了录音后才能进行start、stop调用
+      setInterval( () => {
+        if(this.durationTime === 'NaN') {
+          this.durationTime = 0
         } else {
-          // 剩余的点
-          this.ctx.lineTo(x, y)
+          this.durationTime++
         }
-        // 依次平移，绘制所有点
-        x += sliceWidth
-      }
-
-      this.ctx.lineTo(this.oCanvas.width, this.oCanvas.height / 2)
-      this.ctx.stroke()
+      }, 1000)
+      this.rec.start()
+      // 给用户看的计时，每1s刷新一次
+    },
+    recStop(){
+      this.rec.stop((blob,duration) => {
+          // console.log(blob,(window.URL||webkitURL).createObjectURL(blob),"时长:"+duration+"ms");
+          this.rec.close();//释放录音资源，当然可以不释放，后面可以连续调用start；但不释放时系统或浏览器会一直提示在录音，最佳操作是录完就close掉
+          this.rec=null;
+          
+          //已经拿到blob文件对象想干嘛就干嘛：立即播放、上传
+          
+          /*** 【立即播放例子】 ***/
+          // var audio=document.createElement("audio");
+          // audio.controls=true;
+          // document.body.appendChild(audio);
+          //简单利用URL生成播放地址，注意不用了时需要revokeObjectURL，否则霸占内存
+          const URL = (window.URL||webkitURL).createObjectURL(blob);
+          this.$router.push({name:'Edit', params:{playURL:URL,duration:duration,blob:blob}})
+        },(msg) => {
+          console.log("录音失败:"+msg);
+          this.rec.close();//可以通过stop方法的第3个参数来自动调用close
+          this.rec=null;
+        }
+      )
     }
+    // handleStartTest() {
+    //   console.log('test')
+    // }
   }
 }
 </script>
@@ -191,6 +206,12 @@ export default {
     background-position: center;
     position: relative;
     z-index: 1;
+    #testPlayer{
+      position: absolute;
+      z-index: 100;
+      top: 0;
+      left: 200px;
+    }
     #shade{
       position: absolute;
       top: 0%;
@@ -215,6 +236,17 @@ export default {
       right:(20.34/16rem);
       top:(23.8/16rem);
     }
+    #wave{
+      z-index: 2;
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      width:(300/16rem);
+      height:(300/16rem);
+      background-size: contain;
+      background-position: center;
+    }
     #button-mic{
       z-index: 5;
       position:absolute;
@@ -225,6 +257,22 @@ export default {
       &.shrink{
         width: (64/16*0.8rem)
       }
+    }
+    #infoLeft {
+      z-index: 3;
+      position:absolute;
+      top:50%;
+      right: 56%;
+      transform: translateY(-50%);
+      font-size: (14/16rem);
+    }
+    #infoRight {
+      z-index: 3;
+      position:absolute;
+      top:50%;
+      left: 56%;
+      transform: translateY(-50%);
+      font-size: (14/16rem);
     }
     #info{
       z-index: 3;
@@ -243,14 +291,14 @@ export default {
         font-size: (14/16rem);
       }
     }
-    #canvas{
-      position: relative;
-      top: 73%;
-      transform: translateY(-50%);
-      width: 100%;
-      height: (97.72/16rem);
-      z-index: 4;
-    }
+    // #canvas{
+    //   position: relative;
+    //   top: 73%;
+    //   transform: translateY(-50%);
+    //   width: 100%;
+    //   height: (97.72/16rem);
+    //   z-index: 4;
+    // }
     #duration-time{
       position: absolute;
       top: 0;

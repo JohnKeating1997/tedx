@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-10 16:05:18
- * @LastEditTime: 2021-04-16 23:32:18
+ * @LastEditTime: 2021-04-19 20:05:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\utils\landscape.js
@@ -11,20 +11,20 @@
 */
 // 宽高比
 // const ratio = 2
-export function resizeScreen () {
+export function resizeScreen (orientation) {
   // 根元素
-  const htmlEle = document.querySelector('html')
+  const htmlEle = document.documentElement
   // 真实的页面容器
   // const container = document.getElementById('view')
   // 利用 CSS3 旋转 对根容器逆时针旋转 90 度
-  const detectOrient = () => {
+  const detectOrient = (orientation) => {
     // 这里用window.innerWidth, window.innerHeight 会鬼畜
-    let width = htmlEle.style.width
-    let height = htmlEle.style.height
+    let width = window.screen.availWidth
+    let height = window.screen.availHeight
     console.log('landscape.js innerWidth', width)
     console.log('landscape.js innerHeight', height)
     let style = htmlEle.style.cssText
-    if (width >= height) {
+    if (orientation === 'landscape' || width >= height) {
       /*
         横屏
       */
@@ -44,7 +44,7 @@ export function resizeScreen () {
       style += styleText
       // 然后设置container的大小
       // container.style.cssText += `width:${containerWidth}; height:${containerHeight};`
-    } else if (width < height) {
+    } else if (orientation === 'portrait' || width < height) {
       /*
         竖屏
       */
@@ -74,7 +74,7 @@ export function resizeScreen () {
     }
     htmlEle.style.cssText = style
   }
-  detectOrient()
+  detectOrient(orientation)
 }
 
 // resizeScreen()
