@@ -87,10 +87,16 @@ export default {
       return num
     },
     infoLeft () {
-      return this.lang === 'CN' ? '轻触按钮， ' : 'Tap the button'
+      if (this.durationTime === 'NaN') {
+        return this.lang === 'CN' ? '轻触按钮， ' : 'Tap the button'
+      }
+      return ''
     },
     infoRight () {
-      return this.lang === 'CN' ? '留下你的声音~（最长15秒）' : 'to start recording (maximum 15s)'
+      if (this.durationTime === 'NaN') {
+        return this.lang === 'CN' ? '留下你的声音~（最长15秒）' : 'to start recording (maximum 15s)'
+      }
+      return ''
     },
     background () {
       return this.status === 'beforeRecord' ? background : backgroundStop
