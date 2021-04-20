@@ -128,7 +128,7 @@ export default {
         // 录音开始
         this.recOpen(() => {
           this.recStart()
-          alert('开始录音成功')
+          // alert('开始录音成功')
           // 状态切换到录音中
           this.status = 'recording'
           // 15s后自动停止录音，跳转

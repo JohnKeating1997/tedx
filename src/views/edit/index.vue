@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-20 00:57:38
+ * @LastEditTime: 2021-04-20 09:15:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -20,7 +20,7 @@
         <div class="over-lay"></div>
         <div class="upload" @click="handleUploadImage">
           <!-- 上传图片的input -->
-          <input type="file" class="img-input" accept="image/*" @change="uploadImg" ref="inputImg">
+          <input type="file" class="img-input" accept="image/*" @change="handleImageInput" ref="inputImg">
           <img :src="uploadButton" alt="" class="arrow">
           <p class="info">{{this.uploadPlaceholder}}</p>
         </div>
@@ -96,6 +96,7 @@ export default {
       stopButton,
       // 用户上传的图片
       uploadedImgURL,
+      imageFile: null,
       // 用户是否输入标题
       userInput: false,
       /* 用户输入 */
@@ -157,8 +158,13 @@ export default {
     if (this.$route.params.duration) {
       this.duration = this.$route.params.duration
     }
+    // 生成一个formData
+    this.formData = new FormData()
   },
   activated () {
+    // 刷新formData
+    this.formData = null
+    this.formData = new FormData()
     // 保存路由传进来的播放器属性
     if(this.$route.params.blob) {
       this.blob = this.$route.params.blob
@@ -178,8 +184,8 @@ export default {
         this.$refs.inputTitle.focus()
       }, 0)
     },
-    // 上传图片
-    uploadImg (event) {
+    // 用户输入图片
+    handleImageInput (event) {
       const e = window.event || event
       const oFile = e.target.files[0]
       // console.log(oFile);
@@ -197,12 +203,15 @@ export default {
       // 展示上传图片
       const newsrc = this.getObjectURL(oFile)
       this.uploadedImgURL = newsrc
-      // document.getElementById('show').src = newsrc
-      // var data = new FormData()
-      // data.append('filesData', file)// 这里不管怎样，我决定还是用formdata的方式上传。
-      // $.post('约定地址', data, function (result) {
-      //   console.log(result)
-      // })
+      // 保存oFile
+      this.imageFile = oFile
+    },
+    // 将图片加入到formData
+    appendImg () {
+      return new Promise( (resolve, reject) => {
+        this.formData.append('cover', this.imageFile)
+        resolve('success')
+      })
     },
     // 获取上传成功的图片的url
     getObjectURL (file) {
@@ -292,29 +301,25 @@ export default {
         }
         // 传输表单
         if (flag) {
-          // 生成一个formData
-          this.formData = new FormData()
-          // 等待音频加入到formData
-          const result = await this.appendAudio().catch(err => {
-            alert(err)
-          })
-          if (!result) return
+          // 等待音频和图片加入到formData
+          const [result1,result2] = await Promise.all([this.appendImg(),this.appendAudio()])
+          if (!result1 || !result2) return
           // 加入用户输入的信息
           for (const index in this.options) {
             this.formData.append(index, this.options[index])
           }
           this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
-          // axios.post(url.commitUrl, this.formData).then((res) => {
-          //   console.log(res)
-          //   if (res.status === 200) {
-          //     this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
-          //     return
-          //   }
-          //   this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
-          // }).catch((err) => {
-          //   console.log(err)
-          //   this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
-          // })
+          axios.post(url.commitUrl, this.formData).then((res) => {
+            console.log(res)
+            if (res.status === 200) {
+              this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
+              return
+            }
+            this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
+          }).catch((err) => {
+            console.log(err)
+            this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
+          })
         }
       } else {
         // 验证码错误提示
@@ -348,9 +353,6 @@ export default {
       //   this.uploadRecordModal = false
       // })
     },
-    // appendImg () {
-    //   return new Promise((resolve,))
-    // },
     // 上传数据
     pushData () {
       return new Promise((resolve, reject) => {
