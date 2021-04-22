@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-20 09:15:29
+ * @LastEditTime: 2021-04-20 10:31:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -317,7 +317,7 @@ export default {
             }
             this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
           }).catch((err) => {
-            console.log(err)
+            alert(err)
             this.$router.push({name: 'Error', params: {retry: this.handleSubmit}})
           })
         }

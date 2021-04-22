@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "html2canvas": "^1.0.0-rc.5",
     "install": "^0.13.0",
     "lamejs": "^1.2.0",
     "less": "^4.1.1",

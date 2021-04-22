@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:58
- * @LastEditTime: 2021-04-20 00:47:23
+ * @LastEditTime: 2021-04-21 16:55:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\submit\success.vue
@@ -50,7 +50,7 @@ import thanksInfoCN from '@/assets/images/thanks-info-CN.svg'
 import thanksInfoEN from '@/assets/images/thanks-info-EN.svg'
 import test from '@/assets/images/satellite.png'
 // 长按保存图片的依赖包
-import {saveImg} from '@/utils/saveImage.js'
+// import {saveImg} from '@/utils/saveImage.js'
 export default {
   name: 'Success',
   data () {
@@ -87,7 +87,7 @@ export default {
       }
     },
     saveTips () {
-      return this.lang === 'CN' ? '长按即可保存碎片 ' : 'Tap to save fragment '
+      return this.lang === 'CN' ? '截屏保存碎片 ' : 'Take screen shot to save fragment '
     },
     exceptionTips () {
       return this.lang === 'CN' ? '如碎片无法正常显示，点击这里并手动截图' : 'if the fragment doesn\'t display properly, tap here and take screenshots manually'
@@ -101,13 +101,13 @@ export default {
     }
   },
   methods: {
-    async handleDownload () {
-      // 保存url
-      this.savedRightCard = await saveImg(this.$refs.rightCard)
-    },
-    handleException () {
-      this.savedRightCard = null
-    }
+    // async handleDownload () {
+    //   // 保存url
+    //   this.savedRightCard = await saveImg(this.$refs.rightCard)
+    // },
+    // handleException () {
+    //   this.savedRightCard = null
+    // }
   },
   mounted () {
     // saveImg(this.$refs.rightCard).then( (url) => {
@@ -195,6 +195,8 @@ export default {
         z-index: 3;
         left: (16/16rem);
         top:(263/16rem);
+        background-image: url('../../assets/images/QRCode.png');
+        background-size: contain;
       }
       .dialogue {
         width: (176.62/16rem);
@@ -248,7 +250,7 @@ export default {
       left: (71/16rem);
       top: (312/16rem);
       font-size: (14/16rem);
-      width: (180/16rem);
+      width: (240/16rem);
       text-align: left;
       img {
         font-size: 0;

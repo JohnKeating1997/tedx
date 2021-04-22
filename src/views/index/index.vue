@@ -10,9 +10,10 @@
     <img id="dialog" :src="dialogInSpace" alt="图片加载中">
     <div id="wave" :style="{ 'backgroundImage' : 'url(' + waveGif + ')' }"></div>
     <img id="button-mic" :class="shrink" :src="buttonIcon" alt="图片加载中" @mousedown="handleMouseDown" @mouseup="handleMouseUp">
-    <p id="infoLeft">{{infoLeft}}</p>
-    <p id="infoRight">{{infoRight}}</p>
+    <p id="infoLeft" :class="this.lang === 'CN' ? 'cn' : 'en'">{{infoLeft}}</p>
+    <p id="infoRight" :class="this.lang === 'CN' ? 'cn' : 'en'">{{infoRight}}</p>
     <p id="info" :class="this.lang === 'CN' ? 'chinese' : 'english'">{{info}}</p>
+    <a id="recordation" href="https://beian.miit.gov.cn/#/Integrated/recordQuery" v-if="status === 'beforeRecord'">浙ICP备2021011828号-1</a>
   </div>
 </template>
 
@@ -88,13 +89,13 @@ export default {
     },
     infoLeft () {
       if (this.durationTime === 'NaN') {
-        return this.lang === 'CN' ? '轻触按钮， ' : 'Tap the button'
+        return this.lang === 'CN' ? '轻触按钮' : 'Tap the button'
       }
       return ''
     },
     infoRight () {
       if (this.durationTime === 'NaN') {
-        return this.lang === 'CN' ? '留下你的声音~（最长15秒）' : 'to start recording (maximum 15s)'
+        return this.lang === 'CN' ? '留下你的声音' : 'to start recording'
       }
       return ''
     },
@@ -268,17 +269,33 @@ export default {
       z-index: 3;
       position:absolute;
       top:50%;
-      right: 56%;
       transform: translateY(-50%);
       font-size: (14/16rem);
+      left: 50%;
+      &.cn {
+        letter-spacing: (10/16rem);
+        transform: translateX(-160%);
+      }
+      &.en {
+        letter-spacing: (5/16rem);
+        transform: translateX(-140%);
+      }
     }
     #infoRight {
       z-index: 3;
       position:absolute;
       top:50%;
-      left: 56%;
       transform: translateY(-50%);
       font-size: (14/16rem);
+      left: 50%;
+      &.cn {
+        letter-spacing: (10/16rem);
+        transform: translateX(60%);
+      }
+      &.en {
+        letter-spacing: (5/16rem);
+        transform: translateX(40%);
+      }
     }
     #info{
       z-index: 3;
@@ -309,6 +326,16 @@ export default {
       position: absolute;
       top: 0;
       z-index:3;
+    }
+    #recordation{
+      position: absolute;
+      bottom: (20/16rem);
+      font-size: (10/16rem);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      color: #fff;
+      text-decoration: none;
     }
   }
 
