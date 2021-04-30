@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-20 10:31:39
+ * @LastEditTime: 2021-04-30 17:28:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -308,7 +308,7 @@ export default {
           for (const index in this.options) {
             this.formData.append(index, this.options[index])
           }
-          this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
+          // this.$router.push({name: 'Success', params: {userTitle: this.userTitle, userName: this.userName}})
           axios.post(url.commitUrl, this.formData).then((res) => {
             console.log(res)
             if (res.status === 200) {
