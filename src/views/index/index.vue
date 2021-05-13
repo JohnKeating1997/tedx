@@ -73,8 +73,23 @@ export default {
     if (this.$route.params.status === 'recording') {
       // alert('recording')
       // 如果直接是recording的状态
-      this.handleMouseDown()
+      // this.handleMouseDown()
+      this.status = 'beforeRecord'
       this.handleMouseUp()
+    }
+  },
+  activated () {
+    if (this.$route.params.status === 'recording') {
+      // alert('recording')
+      // 如果直接是recording的状态
+      // this.handleMouseDown()
+      this.status = 'beforeRecord'
+      this.handleMouseUp()
+    } else {
+      this.status = 'beforeRecord'
+      this.timer = null
+      this.wave = null
+      this.durationTime = null
     }
   },
   computed: {
@@ -135,6 +150,7 @@ export default {
           // 15s后自动停止录音，跳转
           this.timer = setTimeout(() => {
             // 停止录音,生成音频url并跳转到编辑页面
+            this.timer = null
             this.recStop()
           }, 16000)
         })
@@ -161,6 +177,7 @@ export default {
         success && success()
       }, function (msg, isUserNotAllow){
           console.log((isUserNotAllow?"UserNotAllow，":"")+"无法录音:"+msg)
+          alert(isUserNotAllow?(this.lang==='CN'?"用户拒绝开启录音权限":"permission request declined"):(msg+(this.lang==='CN'?",请在手机浏览器中打开":"please open with broswer")))
       })
     },
     recStart(){//打开了录音后才能进行start、stop调用

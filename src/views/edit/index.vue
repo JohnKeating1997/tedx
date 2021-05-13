@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-30 17:28:02
+ * @LastEditTime: 2021-04-30 17:48:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -241,7 +241,7 @@ export default {
       } catch (err) {
         console.log(err)
       }
-      // 重新进入编辑界面
+      // 重新进入录音界面
       this.$router.push({name: 'Index', params: {status: 'recording'}})
       // this.recorder.start().then(() => {
       //   this.$router.push({name: 'Index', params: {status: 'recording'}})
