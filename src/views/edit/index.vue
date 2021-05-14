@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-04-08 19:41:39
- * @LastEditTime: 2021-04-30 17:48:52
+ * @LastEditTime: 2021-05-14 14:11:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \tedx\src\views\edit\index.vue
@@ -493,7 +493,7 @@ export default {
           }
         }
         &.error.chinese:after{
-          content: '标题不能为空';
+          content: '标题不能为空，且不包含非法字符 \\ / : * ? " < > |';
           font-size: (8/16rem);
           color: #e62a1f;
           text-align: left;
@@ -501,10 +501,10 @@ export default {
           left: 0;
           // bottom: (-32/16rem);
           top: (20/16rem);
-          width: (100/16rem);
+          width: (250/16rem);
         }
         &.error.english:after{
-          content: 'A title is requiered';
+          content: 'A title is requiered, and should not contain \\ / : * ? " < > |';
           font-size: (8/16rem);
           color: #e62a1f;
           text-align: left;
@@ -512,7 +512,7 @@ export default {
           left: 0;
           // bottom: (-32/16rem);
           top: (20/16rem);
-          width: (100/16rem);
+          width: (250/16rem);
         }
       }
       .form-block {
@@ -564,7 +564,8 @@ export default {
             }
             &.user-name{
               &.error.chinese:after{
-                content: '姓名/昵称不能为空';
+                width: (250/16rem);
+                content: '姓名/昵称不能为空，且不包含非法字符 \\ / : * ? " < > |';
                 font-size: (8/16rem);
                 color: #e62a1f;
                 text-align: left;
@@ -573,7 +574,8 @@ export default {
                 bottom: (-16/16rem);
               }
               &.error.english:after{
-                content: 'Your name is requiered';
+                width: (250/16rem);
+                content: 'Your name is requiered,and should not contain \\ / : * ? " < > |';
                 font-size: (8/16rem);
                 color: #e62a1f;
                 text-align: left;

@@ -76,6 +76,11 @@ export default {
       // this.handleMouseDown()
       this.status = 'beforeRecord'
       this.handleMouseUp()
+    } else {
+      this.status = 'beforeRecord'
+      this.timer = null
+      this.wave = null
+      this.durationTime = 'NaN'
     }
   },
   activated () {
@@ -89,7 +94,7 @@ export default {
       this.status = 'beforeRecord'
       this.timer = null
       this.wave = null
-      this.durationTime = null
+      this.durationTime = 'NaN'
     }
   },
   computed: {
@@ -132,6 +137,11 @@ export default {
       if (this.status === 'beforeRecord') {
         // 改变按钮大小
         this.shrink = 'shrink'
+        setTimeout(()=>{
+          if(this.status === 'beforeRecord') {
+            alert(this.lang === 'CN' ? '检测到无法开启录音权限，请在浏览器内打开' : 'unable to request recording permission, please open with safari or other browser')
+          }
+        },2500)
       }
     },
     handleMouseUp () {
